@@ -1,0 +1,42 @@
+.sign-up {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ant-form-item {
+    &::before {
+      content: none;
+    }
+    &::after {
+      content: none;
+    }
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: column;
+
+    .ant-form-item-label {
+      margin-right: 2rem;
+    }
+
+    .ant-form-item-control-wrapper {
+      grid-column: 2/4;
+    }
+  }
+}
+
+@media (max-width: 48em) {
+  .sign-up {
+    padding: 0 1rem;
+
+    .ant-form-item {
+      .ant-form-item-label {
+        font-size: 0.5rem;
+      }
+
+      .ant-form-item-control-wrapper {
+      }
+    }
+  }
+}

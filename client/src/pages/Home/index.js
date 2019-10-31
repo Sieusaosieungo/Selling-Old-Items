@@ -3,8 +3,12 @@ import { withPlatform } from "../../context/platform";
 import { Tabs } from "antd";
 
 import "./style.scss";
+import CategoryCard from "../../components/CategoryCard";
+import Category from "../../components/Category";
 
-// import SideBar from "../../components/SideBar";
+// fake data
+import { categories } from "../../utils/data";
+
 const { TabPane } = Tabs;
 
 const prefixCls = "home";
@@ -15,23 +19,23 @@ const Home = ({ platform }) => {
   return (
     <div className={`${prefixCls}`}>
       <Tabs tabPosition={mode}>
-        <TabPane tab={`Table`} key={"1"}>
-          Content of tab {"1"}
+        <TabPane tab={`Trang chủ`} key={"trang-chu"}>
+          <CategoryCard categories={categories} />
         </TabPane>
-        <TabPane tab={`Chair`} key={"2"}>
-          Content of tab {"2"}
+        <TabPane tab={`Bàn`} key={"ban"}>
+          <Category {...categories[0]} />
         </TabPane>
-        <TabPane tab={`Fan`} key={"3"}>
-          Content of tab {"3"}
+        <TabPane tab={`Quạt`} key={"quat"}>
+          <Category {...categories[0]} />
         </TabPane>
-        <TabPane tab={`Led`} key={"4"}>
-          Content of tab {"4"}
+        <TabPane tab={`Đèn`} key={"den"}>
+          <Category {...categories[0]} />
         </TabPane>
-        <TabPane tab={`Mouse`} key={"5"}>
-          Content of tab {"5"}
+        <TabPane tab={`Chuột`} key={"chuot"}>
+          <Category {...categories[0]} />
         </TabPane>
-        <TabPane tab={`Wardrobe`} key={"6"}>
-          Content of tab {"6"}
+        <TabPane tab={`Tủ quần áo`} key={"tu-quan-ao"}>
+          <Category {...categories[0]} />
         </TabPane>
       </Tabs>
     </div>

@@ -1,14 +1,26 @@
 .home {
+  flex-grow: 1;
+  display: flex;
+
   .ant-tabs-vertical {
+    flex-grow: 1;
+    display: flex;
+
     .ant-tabs-left-bar {
-      height: 100vh !important;
-      width: 17vw !important;
+      width: 20vw !important;
       text-align: center;
 
       .ant-tabs-tab {
         text-align: center;
         padding: 2rem 0;
         margin: 0;
+      }
+    }
+
+    .ant-tabs-left-content {
+      flex-grow: 1;
+      padding: {
+        right: 2.4rem;
       }
     }
   }
