@@ -6,7 +6,7 @@
   "author": "lyanunplus7@gmail.com <lyanunplus7@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "server": "nodemon src/index.js"
+    "start": "nodemon src/index.js"
   },
   "devDependencies": {
     "eslint": "6.6.0",
