@@ -5,6 +5,9 @@
   "repository": "https://github.com/Sieusaosieungo/Selling-Old-Items.git",
   "author": "lyanunplus7@gmail.com <lyanunplus7@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "server": "nodemon src/index.js"
+  },
   "devDependencies": {
     "eslint": "6.6.0",
     "eslint-config-airbnb-base": "14.0.0",
@@ -13,5 +16,14 @@
     "eslint-plugin-prettier": "3.1.1",
     "prettier": "1.18.2",
     "prettier-eslint-cli": "5.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "4.17.1",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.7.7",
+    "nodemon": "1.19.4",
+    "snakecase-keys": "3.1.0"
   }
 }
