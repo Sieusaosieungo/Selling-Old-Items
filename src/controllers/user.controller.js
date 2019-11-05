@@ -41,7 +41,19 @@ async function signin(req, res) {
   });
 }
 
+async function getAllUser(req, res) {
+  const users = await User.find({});
+
+  res.send({
+    status: 1,
+    results: {
+      users,
+    },
+  });
+}
+
 module.exports = {
   signup,
   signin,
+  getAllUser,
 };
