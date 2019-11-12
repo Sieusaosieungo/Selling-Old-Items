@@ -30,7 +30,20 @@ async function getProductsByCategory(req, res) {
   });
 }
 
+async function getProductById(req, res) {
+  const { product_id } = req.param;
+  const product = await Product.findById(product_id);
+
+  res.send({
+    status: 1,
+    results: {
+      product,
+    },
+  });
+}
+
 module.exports = {
   addProduct,
   getProductsByCategory,
+  getProductById,
 };

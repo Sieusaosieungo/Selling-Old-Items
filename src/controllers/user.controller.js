@@ -1,9 +1,14 @@
 const bcrypt = require('bcryptjs');
+const validator = require('validator');
 const CustomError = require('../errors/CustomError');
 const errorCode = require('../errors/errorCode');
 const User = require('../models/user.model');
 
 async function signup(req, res) {
+  if (!validator.isEmail(req.body.email)) {
+    throw new Error('Email is invalid');
+  }
+
   const checkExistEmail = await User.findOne({ email: req.body.email });
   if (checkExistEmail) {
     throw new CustomError(errorCode.CONFLICT, 'Email already exist');
