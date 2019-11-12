@@ -6,11 +6,15 @@ const auth = require('../middlewares/auth');
 const {
   signup,
   signin,
-  getAllUser,
+  logout,
+  logoutAllDevice,
+  getInfoUser,
 } = require('../controllers/user.controller');
 
 router.post('/signup', asyncWrap(signup));
 router.post('/signin', asyncWrap(signin));
-router.get('/get-list', auth, asyncWrap(getAllUser));
+router.post('/logout', auth, asyncWrap(logout));
+router.post('/logout-all', auth, asyncWrap(logoutAllDevice));
+router.get('/', auth, asyncWrap(getInfoUser));
 
 module.exports = router;

@@ -9,6 +9,8 @@ const errorHandler = require('./middlewares/errorHanlder');
 
 app.use(express.json());
 app.use('/api/users', require('./routes/user.route'));
+app.use('/api/categories', require('./routes/category.route'));
+app.use('/api/products', require('./routes/product.route'));
 
 app.use(errorHandler);
 

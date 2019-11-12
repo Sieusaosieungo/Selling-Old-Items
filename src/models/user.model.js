@@ -19,15 +19,15 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    fullName: {
+    full_name: {
       type: String,
       trim: true,
       maxlength: 50,
     },
-    dateOfBirth: {
+    date_of_birth: {
       type: Date,
     },
-    studentId: {
+    student_id: {
       type: String,
       trim: true,
     },
@@ -59,6 +59,7 @@ userSchema.methods.toJSON = function() {
   const userObject = user.toObject();
   delete userObject.password;
   delete userObject.tokens;
+  delete userObject.role;
 
   return userObject;
 };
