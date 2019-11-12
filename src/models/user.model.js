@@ -24,9 +24,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       maxlength: 50,
     },
-    date_of_birth: {
-      type: Date,
-    },
     gender: {
       type: String,
     },
