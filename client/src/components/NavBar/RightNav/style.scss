@@ -1,0 +1,16 @@
+.ant-menu {
+  .avatar {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      border-color: #ffffff;
+    }
+
+    > img {
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+}

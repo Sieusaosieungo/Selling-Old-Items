@@ -1,16 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Card } from "antd";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Card } from 'antd';
 
-import "./style.scss";
+import './style.scss';
 
 const { Meta } = Card;
 
-const prefixCls = "category-item";
+const prefixCls = 'category-item';
 
 const ProductItem = ({ id, name, image, price = 0 }) => {
   return (
-    <Link to={`/detail-product/${id}`} className={`${prefixCls}`}>
+    <Link to={`/product-detail/${id}`} className={`${prefixCls}`}>
       <Card
         className={`${prefixCls}-card`}
         hoverable

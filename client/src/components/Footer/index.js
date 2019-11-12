@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import "./style.scss";
+import './style.scss';
 
-const prefixCls = "footer";
+const prefixCls = 'footer';
 
 const Footer = () => {
-  return <div className={`${prefixCls}`}>Created by team NW !</div>;
+  return <div className={`${prefixCls}`}>Created by team NW ! </div>;
 };
 
 export default Footer;

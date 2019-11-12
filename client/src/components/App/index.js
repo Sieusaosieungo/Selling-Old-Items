@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react';
 
-import "./styles.scss";
+import './styles.scss';
 
-import NavBar from "../NavBar";
-import Footer from "../Footer";
+import NavBar from '../NavBar';
+import Footer from '../Footer';
 
 function App({ children }) {
   return (

@@ -1,0 +1,57 @@
+@mixin scss-info-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  padding: 1rem 0;
+
+  > span {
+    grid-column: 1/3;
+  }
+
+  > input {
+    grid-column: 3/8;
+  }
+
+  > button {
+    grid-column: 4/7;
+  }
+
+  > .ant-calendar-picker {
+    grid-column: 3/8;
+  }
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 2rem 2rem;
+
+  > p {
+    font-size: 1.9rem;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+
+    .profile-name {
+      @include scss-info-row;
+    }
+
+    .profile-email {
+      @include scss-info-row;
+    }
+
+    .profile-date-of-birth {
+      @include scss-info-row;
+    }
+
+    .profile-student-id {
+      @include scss-info-row;
+    }
+
+    .profile-button {
+      @include scss-info-row;
+    }
+  }
+}

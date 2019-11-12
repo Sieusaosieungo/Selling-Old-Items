@@ -1,8 +1,10 @@
-.sign-up {
+.post-product {
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  margin-top: 2rem;
 
   > .ant-form {
     padding: 3rem 4rem 0 0;
@@ -37,21 +39,6 @@
 
     .ant-btn-primary {
       width: 100%;
-    }
-  }
-}
-
-@media (max-width: 48em) {
-  .sign-up {
-    padding: 0 1rem;
-
-    .ant-form-item {
-      .ant-form-item-label {
-        font-size: 0.5rem;
-      }
-
-      .ant-form-item-control-wrapper {
-      }
     }
   }
 }
