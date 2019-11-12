@@ -31,7 +31,7 @@ async function getProductsByCategory(req, res) {
 }
 
 async function getProductById(req, res) {
-  const { product_id } = req.param;
+  const { product_id } = req.params;
   const product = await Product.findById(product_id);
 
   res.send({
