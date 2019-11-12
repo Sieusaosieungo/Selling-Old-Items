@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema(
     date_of_birth: {
       type: Date,
     },
+    gender: {
+      type: String,
+    },
     student_id: {
       type: String,
       trim: true,
