@@ -16,9 +16,6 @@ const columns = [
     title: 'Price',
     dataIndex: 'price',
     key: 'price',
-    // render: price=>{
-
-    // }
   },
   {
     title: 'Description',

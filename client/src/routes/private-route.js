@@ -9,7 +9,7 @@ const PrivateRoute = ({ cookies, component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props => {
-        if (accessToken && accessToken !== '' && isAuth === 'true') {
+        if (accessToken && accessToken !== '' && isAuth === true) {
           return <Component {...props} />;
         } else {
           return <Redirect to="/sign-in" />;

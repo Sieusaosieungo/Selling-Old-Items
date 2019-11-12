@@ -1,5 +1,8 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 
-const rootReducer = combineReducers({ count: 0 });
+import user from './user';
+import auth from './auth';
+
+const rootReducer = combineReducers({ user, auth });
 
 export default rootReducer;

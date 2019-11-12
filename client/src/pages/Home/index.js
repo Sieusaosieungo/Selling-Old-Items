@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withPlatform } from '../../context/platform';
-import { Tabs } from 'antd';
+import { Tabs, message } from 'antd';
+import axios from 'axios';
 
 import './style.scss';
 import CategoryCard from '../../components/CategoryCard';
 import Category from '../../components/Category';
-
-// fake data
-// import { categories } from '../../utils/data';
 
 const { TabPane } = Tabs;
 
@@ -18,6 +16,15 @@ const renderCategory = () => {};
 const Home = ({ platform }) => {
   const mode = platform.isMobile ? 'top' : 'left';
   const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axios({})
+      .then(res => {
+        if (1) {
+        }
+      })
+      .catch(err => console.log(err));
+  }, [categories]);
 
   return (
     <div className={`${prefixCls}`}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Form, Button, Select, DatePicker } from 'antd';
+import { Input, Form, Button, Select, message } from 'antd';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import config from '../../utils/config';
 
 import './style.scss';
@@ -36,8 +37,9 @@ const tailFormItemLayout = {
   },
 };
 
-const Signup = ({ form: { getFieldDecorator }, form }) => {
+const Signup = ({ form: { getFieldDecorator }, form, history }) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies('cookies');
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -48,14 +50,14 @@ const Signup = ({ form: { getFieldDecorator }, form }) => {
         axios({
           method: 'POST',
           url: `${config.API_URL}/users/signup`,
-          data: {
-            values,
-          },
+          data: values,
         })
           .then(res => {
-            console.log(res);
+            setCookie('accessToken', res.data.results.token);
+            message.success('Đăng ký thành công !');
+            history.goBack();
           })
-          .catch(err => console.log(err));
+          .catch(() => message.error('Lỗi đăng ký !'));
       }
     });
   };
@@ -124,7 +126,7 @@ const Signup = ({ form: { getFieldDecorator }, form }) => {
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
         <Form.Item label="Full Name">
-          {getFieldDecorator('name', {
+          {getFieldDecorator('full_name', {
             rules: [
               {
                 required: true,
