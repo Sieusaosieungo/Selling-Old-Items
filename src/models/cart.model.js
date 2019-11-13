@@ -8,6 +8,7 @@ const CartSchema = new mongoose.Schema(
     },
     total_money: {
       type: Number,
+      default: 0,
     },
   },
   {

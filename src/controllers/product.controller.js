@@ -2,6 +2,8 @@
 // const CustomError = require('../errors/CustomError');
 // const errorCode = require('../errors/errorCode');
 const Product = require('../models/product.model');
+const Cart = require('../models/cart.model');
+const CartDetail = require('../models/cartdetail.model');
 
 async function addProduct(req, res) {
   const product = await Product.create({
@@ -42,8 +44,45 @@ async function getProductById(req, res) {
   });
 }
 
+async function addProductToCart(req, res) {
+  const { product_id } = req.body;
+  const user_id = req.user._id;
+
+  const product = await Product.findById(product_id);
+  const cart = await Cart.findOne({ user_id });
+
+  if (!cart) {
+    await Cart.create({ user_id, total_money: product.cost });
+  } else {
+    cart.total_money += product.cost;
+
+    const cartDetail = await CartDetail.findOne({
+      cart_id: cart._id,
+      product_id: product._id,
+    });
+
+    if (!cartDetail) {
+      await CartDetail.create({
+        cart_id: cart._id,
+        product_id: product._id,
+        quantity: 1,
+      });
+    } else {
+      cartDetail.quantity += 1;
+    }
+
+    await cart.save();
+    await cartDetail.save();
+  }
+
+  res.send({
+    status: 1,
+  });
+}
+
 module.exports = {
   addProduct,
   getProductsByCategory,
   getProductById,
+  addProductToCart,
 };

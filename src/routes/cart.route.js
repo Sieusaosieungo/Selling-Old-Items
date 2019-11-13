@@ -3,12 +3,8 @@ const express = require('express');
 const router = express.Router();
 const asyncWrap = require('../middlewares/asyncWrap');
 const auth = require('../middlewares/auth');
-const {
-  addCategory,
-  getListCategory,
-} = require('../controllers/category.controller');
+const { getCartByUser } = require('../controllers/cart.controller');
 
-router.post('/', auth, asyncWrap(addCategory));
-router.get('/', asyncWrap(getListCategory));
+router.get('/', auth, asyncWrap(getCartByUser));
 
 module.exports = router;

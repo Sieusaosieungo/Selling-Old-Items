@@ -15,6 +15,7 @@ app.use(cors());
 app.use('/api/users', require('./routes/user.route'));
 app.use('/api/categories', require('./routes/category.route'));
 app.use('/api/products', require('./routes/product.route'));
+app.use('/api/carts', require('./routes/cart.route'));
 
 app.use(express.static(path.join(__dirname, '../static')));
 app.use(errorHandler);
