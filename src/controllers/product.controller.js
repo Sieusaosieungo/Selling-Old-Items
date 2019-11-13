@@ -52,27 +52,32 @@ async function addProductToCart(req, res) {
   const cart = await Cart.findOne({ user_id });
 
   if (!cart) {
-    await Cart.create({ user_id, total_money: product.cost });
+    const newCart = await Cart.create({ user_id, total_money: product.cost });
+    await CartDetail.create({
+      cart_id: newCart._id,
+      product_id,
+      quantity: 1,
+    });
   } else {
     cart.total_money += product.cost;
 
     const cartDetail = await CartDetail.findOne({
       cart_id: cart._id,
-      product_id: product._id,
+      product_id,
     });
 
     if (!cartDetail) {
       await CartDetail.create({
         cart_id: cart._id,
-        product_id: product._id,
+        product_id,
         quantity: 1,
       });
     } else {
       cartDetail.quantity += 1;
+      await cartDetail.save();
     }
 
     await cart.save();
-    await cartDetail.save();
   }
 
   res.send({
