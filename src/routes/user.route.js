@@ -9,6 +9,7 @@ const {
   logout,
   logoutAllDevice,
   getInfoUser,
+  updateInfoUser,
 } = require('../controllers/user.controller');
 
 router.post('/signup', asyncWrap(signup));
@@ -16,5 +17,6 @@ router.post('/signin', asyncWrap(signin));
 router.post('/logout', auth, asyncWrap(logout));
 router.post('/logout-all', auth, asyncWrap(logoutAllDevice));
 router.get('/', auth, asyncWrap(getInfoUser));
+router.patch('/', auth, asyncWrap(updateInfoUser));
 
 module.exports = router;

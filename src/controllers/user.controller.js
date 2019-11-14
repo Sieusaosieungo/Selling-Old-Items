@@ -67,10 +67,37 @@ async function getInfoUser(req, res) {
   });
 }
 
+async function updateInfoUser(req, res) {
+  const { fullName, gender, oldPassword, newPassword } = req.body;
+
+  const isMatch = await bcrypt.compare(oldPassword, req.user.password);
+  if (!isMatch) {
+    throw new CustomError(errorCode.FORBIDDEN, 'You enter password incorrect');
+  }
+
+  if (oldPassword === newPassword) {
+    throw new CustomError(
+      errorCode.FORBIDDEN,
+      'You enter new password to match to old password',
+    );
+  }
+
+  req.user.full_name = fullName;
+  req.user.gender = gender;
+  req.user.password = newPassword;
+
+  await req.user.save();
+
+  res.send({
+    status: 1,
+  });
+}
+
 module.exports = {
   signup,
   signin,
   logout,
   logoutAllDevice,
   getInfoUser,
+  updateInfoUser,
 };
