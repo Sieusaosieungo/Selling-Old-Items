@@ -71,21 +71,32 @@ async function getInfoUser(req, res) {
 async function updateInfoUser(req, res) {
   const { full_name, gender, oldPassword, newPassword } = req.body;
 
-  const isMatch = await bcrypt.compare(oldPassword, req.user.password);
-  if (!isMatch) {
-    throw new CustomError(errorCode.FORBIDDEN, 'You enter password incorrect');
+  if (oldPassword && newPassword) {
+    const isMatch = await bcrypt.compare(oldPassword, req.user.password);
+    if (!isMatch) {
+      throw new CustomError(
+        errorCode.FORBIDDEN,
+        'You enter password incorrect',
+      );
+    }
+
+    if (oldPassword === newPassword) {
+      throw new CustomError(
+        errorCode.FORBIDDEN,
+        'You enter new password to match to old password',
+      );
+    }
+
+    req.user.password = newPassword;
   }
 
-  if (oldPassword === newPassword) {
-    throw new CustomError(
-      errorCode.FORBIDDEN,
-      'You enter new password to match to old password',
-    );
+  if (full_name) {
+    req.user.full_name = full_name;
   }
 
-  req.user.full_name = full_name;
-  req.user.gender = gender;
-  req.user.password = newPassword;
+  if (gender) {
+    req.user.gender = gender;
+  }
 
   await req.user.save();
 
