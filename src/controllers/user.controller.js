@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const CustomError = require('../errors/CustomError');
@@ -68,7 +69,7 @@ async function getInfoUser(req, res) {
 }
 
 async function updateInfoUser(req, res) {
-  const { fullName, gender, oldPassword, newPassword } = req.body;
+  const { full_name, gender, oldPassword, newPassword } = req.body;
 
   const isMatch = await bcrypt.compare(oldPassword, req.user.password);
   if (!isMatch) {
@@ -82,7 +83,7 @@ async function updateInfoUser(req, res) {
     );
   }
 
-  req.user.full_name = fullName;
+  req.user.full_name = full_name;
   req.user.gender = gender;
   req.user.password = newPassword;
 
