@@ -102,6 +102,9 @@ async function updateInfoUser(req, res) {
 
   res.send({
     status: 1,
+    results: {
+      user: req.user,
+    },
   });
 }
 
