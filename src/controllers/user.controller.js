@@ -82,7 +82,7 @@ async function updateInfoUser(req, res) {
 
     if (oldPassword === newPassword) {
       throw new CustomError(
-        errorCode.FORBIDDEN,
+        errorCode.BAD_REQUEST,
         'You enter new password to match to old password',
       );
     }
@@ -90,11 +90,11 @@ async function updateInfoUser(req, res) {
     req.user.password = newPassword;
   }
 
-  if (full_name) {
+  if (full_name && full_name !== req.user.full_name) {
     req.user.full_name = full_name;
   }
 
-  if (gender) {
+  if (gender && gender !== req.user.gender) {
     req.user.gender = gender;
   }
 
