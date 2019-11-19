@@ -4,6 +4,7 @@ const validator = require('validator');
 const CustomError = require('../errors/CustomError');
 const errorCode = require('../errors/errorCode');
 const User = require('../models/user.model');
+const Product = require('../models/product.model');
 
 async function signup(req, res) {
   if (!validator.isEmail(req.body.email)) {
@@ -108,6 +109,16 @@ async function updateInfoUser(req, res) {
   });
 }
 
+async function getProductsOfUser(req, res) {
+  const products = await Product.find({ user_id: req.user._id });
+  res.send({
+    status: 1,
+    results: {
+      products,
+    },
+  });
+}
+
 module.exports = {
   signup,
   signin,
@@ -115,4 +126,5 @@ module.exports = {
   logoutAllDevice,
   getInfoUser,
   updateInfoUser,
+  getProductsOfUser,
 };
