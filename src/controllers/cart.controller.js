@@ -36,6 +36,7 @@ async function getCartByUser(req, res) {
 async function increaseProductToCart(req, res) {
   const { product_id } = req.body;
   const cart = await Cart.findOne({ user_id: req.user._id });
+  const product = await Product.findById(product_id);
   const cartDetail = await CartDetail.findOne({
     cart_id: cart._id,
     product_id,
@@ -43,6 +44,9 @@ async function increaseProductToCart(req, res) {
 
   cartDetail.quantity += 1;
   await cartDetail.save();
+
+  cart.total_money += product.cost;
+  await cart.save();
 
   res.send({
     status: 1,
@@ -55,6 +59,7 @@ async function increaseProductToCart(req, res) {
 async function decreaseProductToCart(req, res) {
   const { product_id } = req.body;
   const cart = await Cart.findOne({ user_id: req.user._id });
+  const product = await Product.findById(product_id);
   const cartDetail = await CartDetail.findOne({
     cart_id: cart._id,
     product_id,
@@ -62,6 +67,9 @@ async function decreaseProductToCart(req, res) {
 
   cartDetail.quantity -= 1;
   await cartDetail.save();
+
+  cart.total_money -= product.cost;
+  await cart.save();
 
   res.send({
     status: 1,
@@ -74,15 +82,37 @@ async function decreaseProductToCart(req, res) {
 async function deleteProductOnCart(req, res) {
   const { product_id } = req.body;
   const cart = await Cart.findOne({ user_id: req.user._id });
-  const cartDetail = await CartDetail.findOneAndDelete({
+  const product = await Product.findById(product_id);
+  const cartDetail = await CartDetail.findOne({
     cart_id: cart._id,
     product_id,
   });
 
+  cart.total_money -= cartDetail.quantity * product.cost;
+  await CartDetail.findByIdAndDelete(cartDetail._id);
+  await cart.save();
+
+  const cartDetails = await CartDetail.find({ cart_id: cart._id }).lean();
+  const cartDetailer = await Promise.all(
+    cartDetails.map(async cd => {
+      const productObject = await Product.findById(cd.product_id);
+
+      return {
+        ...cd,
+        productImages: productObject.images,
+        productName: productObject.name,
+        productPrice: productObject.cost,
+      };
+    }),
+  );
+
   res.send({
     status: 1,
     results: {
-      id: cartDetail.product_id,
+      listItems: [...cartDetailer],
+      total_money: cart.total_money,
+      createdAt: cart.createdAt,
+      updatedAt: cart.updatedAt,
     },
   });
 }
