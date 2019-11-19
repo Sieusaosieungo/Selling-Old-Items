@@ -11,8 +11,24 @@
     grid-column: 3/8;
   }
 
-  > button {
+  > .profile-btn {
     grid-column: 4/7;
+  }
+
+  > .profile-btn-update {
+    grid-column: 3/5;
+  }
+
+  > .profile-btn-cancel {
+    grid-column: 6/8;
+  }
+
+  .ant-checkbox-wrapper {
+    grid-column: 3/8;
+  }
+
+  .ant-select {
+    grid-column: 3/8;
   }
 
   > .ant-calendar-picker {
@@ -43,6 +59,26 @@
     }
 
     .profile-date-of-birth {
+      @include scss-info-row;
+    }
+
+    .profile-gender {
+      @include scss-info-row;
+    }
+
+    .profile-old-password {
+      @include scss-info-row;
+    }
+
+    .profile-new-password {
+      @include scss-info-row;
+    }
+
+    .profile-checkbox {
+      @include scss-info-row;
+    }
+
+    .profile-confirm-new-password {
       @include scss-info-row;
     }
 

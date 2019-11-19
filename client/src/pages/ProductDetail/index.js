@@ -1,11 +1,24 @@
 import React, { useEffect, Fragment, useState } from 'react';
-import { Comment, Avatar, Form, Button, List, Input, Rate } from 'antd';
+import { useCookies } from 'react-cookie';
 import moment from 'moment';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import {
+  Comment,
+  Avatar,
+  Form,
+  Button,
+  List,
+  Input,
+  Rate,
+  message,
+} from 'antd';
 
 import './style.scss';
 
-// fake data
-import { categories } from '../../utils/data';
+import config from '../../utils/config';
+import Loading from '../../components/Loading';
+import { numberToNumberWithCommas } from '../../utils/formatPrice';
 
 const { TextArea } = Input;
 
@@ -38,17 +51,21 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
   </div>
 );
 
-const ProductDetail = ({}) => {
+const ProductDetail = ({
+  match: {
+    params: { id },
+  },
+}) => {
   const [stateComment, setStateComment] = useState({
     comments: [],
     submitting: false,
     value: '',
   });
   const [quantity, setQuantity] = useState(1);
+  const [productItem, setProductItem] = useState({});
+  const [cookies, setCookie, removeCookie] = useCookies('cookies');
 
-  useEffect(() => {});
-
-  const { image, name, price, description } = categories[0].productItems[0];
+  const { accessToken } = cookies;
 
   const handleSubmit = () => {
     if (!stateComment.value) {
@@ -85,69 +102,105 @@ const ProductDetail = ({}) => {
     });
   };
 
-  const handleAddToCart = () => {};
+  const handleAddToCart = () => {
+    axios({
+      method: 'POST',
+      url: `${config.API_URL}/products/add-to-cart`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        product_id: id,
+      },
+    })
+      .then(res => {
+        message.success(`Thêm sản phẩm vào giỏ hàng thành công !`);
+        // message.info(
+        //   `Click để đi đến giỏ hàng: ${(<Link to={'/user/cart'}>Click</Link>)}`,
+        // );
 
-  return (
-    <Fragment>
-      <div className={`${prefixCls}`}>
-        <div className={`${prefixCls}-image`}>
-          <img src={image} alt={name} />
-        </div>
-        <div className={`${prefixCls}-info`}>
-          <div className={`${prefixCls}-title`}>{name}</div>
-          <div className={`${prefixCls}-price`}>{`${price}đ`}</div>
-          <div className={`${prefixCls}-rate`}>
-            <Rate />
+        // console.log('product detail info =', res.data);
+      })
+      .catch(err => message.warning('Cần đăng nhập để thêm vào giỏ hàng !'));
+  };
+
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: `${config.API_URL}/products/${id}`,
+    })
+      .then(res => {
+        if (res.data.results.product) {
+          setProductItem(res.data.results.product);
+          console.log(res.data.results.product);
+        }
+      })
+      .catch(err => console.log(err));
+  }, [id]);
+
+  if (JSON.stringify({}) !== JSON.stringify(productItem)) {
+    return (
+      <Fragment>
+        <div className={`${prefixCls}`}>
+          <div className={`${prefixCls}-image`}>
+            <img
+              src={`${config.API_IMAGES}${productItem.images[0]}`}
+              alt={productItem.name}
+            />
           </div>
-          <div className={`${prefixCls}-description`}>
-            <span>Mô tả:</span>
-            <p>{description}</p>
-          </div>
-          <div className={`${prefixCls}-quantity`}>
-            <div className={`${prefixCls}-quantity-display`}>
-              <Button className={`${prefixCls}-decrease`}>-</Button>
-              &nbsp;&nbsp;
-              {quantity}
-              &nbsp;&nbsp;
-              <Button className={`${prefixCls}-increase`}>+</Button>
+          <div className={`${prefixCls}-info`}>
+            <div className={`${prefixCls}-title`}>{productItem.name}</div>
+            <div className={`${prefixCls}-price`}>{`${numberToNumberWithCommas(
+              productItem.cost,
+            )}đ`}</div>
+            <div className={`${prefixCls}-rate`}>
+              <Rate />
             </div>
-            <Button onClick={handleAddToCart} type="primary">
-              Add to cart
-            </Button>
+            <div className={`${prefixCls}-description`}>
+              <span>Mô tả:</span>
+              <p>{productItem.description}</p>
+            </div>
+            <div className={`${prefixCls}-quantity`}>
+              <Button onClick={handleAddToCart} type="primary">
+                Add to cart
+              </Button>
+            </div>
+          </div>
+          <div className={`${prefixCls}-comment`}>
+            {stateComment.comments.length > 0 ? (
+              <CommentList comments={stateComment.comments} />
+            ) : (
+              <div
+                style={{
+                  margin: '7rem auto 3rem',
+                  width: '80%',
+                  borderTop: '1px solid rgb(202, 202, 202)',
+                }}
+              ></div>
+            )}
+            <Comment
+              avatar={
+                <Avatar
+                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  alt="Han Solo"
+                />
+              }
+              content={
+                <Editor
+                  onChange={handleChange}
+                  onSubmit={handleSubmit}
+                  submitting={stateComment.submitting}
+                  value={stateComment.value}
+                />
+              }
+            />
           </div>
         </div>
-        <div className={`${prefixCls}-comment`}>
-          {stateComment.comments.length > 0 ? (
-            <CommentList comments={stateComment.comments} />
-          ) : (
-            <div
-              style={{
-                margin: '7rem auto 3rem',
-                width: '80%',
-                borderTop: '1px solid rgb(202, 202, 202)',
-              }}
-            ></div>
-          )}
-          <Comment
-            avatar={
-              <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                alt="Han Solo"
-              />
-            }
-            content={
-              <Editor
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                submitting={stateComment.submitting}
-                value={stateComment.value}
-              />
-            }
-          />
-        </div>
-      </div>
-    </Fragment>
-  );
+      </Fragment>
+    );
+  } else {
+    return <Loading />;
+  }
 };
 
 export default ProductDetail;

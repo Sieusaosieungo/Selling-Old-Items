@@ -6,8 +6,8 @@
   padding: 1rem;
 
   > img {
-    height: auto;
-    width: 20rem;
+    height: 10rem;
+    width: 12rem;
   }
 
   .cart-item-info {
@@ -26,19 +26,28 @@
     }
 
     > span {
-      grid-column: 9/11;
+      grid-column: 8/10;
       grid-row: 1/2;
       font-weight: 650;
     }
 
     .cart-item-quantity {
       display: flex;
+      justify-content: center;
+      grid-column: 10/13;
       grid-row: 1/2;
     }
 
-    > button {
-      grid-column: 11/12;
+    > .cart-item-btn {
+      grid-column: 10/13;
       grid-row: 2/3;
+      display: flex;
+      justify-content: center;
+      margin-top: 0.5rem;
+
+      > button {
+        width: 50%;
+      }
     }
   }
 }
@@ -49,8 +58,8 @@
     padding: 0 0 1rem 0;
 
     > img {
-      width: 15rem;
-      height: 15rem;
+      width: 12rem;
+      height: 12rem;
     }
 
     .cart-item-info {

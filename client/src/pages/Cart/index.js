@@ -1,40 +1,86 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { Button, message } from 'antd';
 
 import './style.scss';
 
 import CartItem from '../../components/CartItem';
-import { Button } from 'antd';
+import config from '../../utils/config';
+import { numberToNumberWithCommas } from '../../utils/formatPrice';
+import Loading from '../../components/Loading';
 
 const prefixCls = 'cart';
 
+const renderCartItem = (listItems, setCart) => {
+  let result = null;
+
+  if (listItems && listItems.length > 0) {
+    result = listItems.map((productItem, index) => {
+      return <CartItem key={index} {...productItem} setCart={setCart} />;
+    });
+  }
+
+  return result;
+};
+
 const Cart = ({}) => {
-  const handleTempPayment = () => {
-    return '27.000';
+  const [cookies, setCookie, removeCookie] = useCookies('cookies');
+  const [cart, setCart] = useState([]);
+
+  const { accessToken } = cookies;
+
+  const handleTempPayment = cart => {
+    return cart.total_money;
   };
 
-  const handleRealPayment = () => {
-    return '28.000';
+  const handleRealPayment = cart => {
+    return cart.total_money;
   };
+
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: `${config.API_URL}/carts/`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then(res => {
+        if (res.data.results.listItems) {
+          setCart(res.data.results);
+          // console.log('cart=', res.data.results);
+        }
+      })
+      .catch(err => console.log(err));
+  }, [JSON.stringify(cart)]);
 
   return (
     <div className={`${prefixCls}`}>
       <p>
-        giỏ hàng <span>(2 sản phẩm)</span>
+        giỏ hàng
+        <span>({cart.listItems ? cart.listItems.length : 0} sản phẩm)</span>
       </p>
       <div className={`${prefixCls}-content`}>
-        <CartItem />
-        <CartItem />
+        {cart.listItems && renderCartItem(cart.listItems, setCart)}
+        {!cart.listItems && (
+          <div className={`${prefixCls}-empty`}>Giỏ hàng rỗng !</div>
+        )}
       </div>
       <div className={`${prefixCls}-payment-side`}>
         <div className={`${prefixCls}-payment`}>
           <div className={`${prefixCls}-temp`}>
             <span>Tạm tính:</span>
-            <span>{`${handleTempPayment()}đ`}</span>
+            <span>{`${numberToNumberWithCommas(
+              handleTempPayment(cart) || 0,
+            )}đ`}</span>
           </div>
           <span></span>
           <div className={`${prefixCls}-real`}>
             <span>Thành tiền (Đã có giảm giá):</span>
-            <span>{`${handleRealPayment()}đ`}</span>
+            <span>{`${numberToNumberWithCommas(
+              handleRealPayment(cart) || 0,
+            )}đ`}</span>
           </div>
         </div>
       </div>

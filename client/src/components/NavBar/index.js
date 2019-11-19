@@ -19,7 +19,7 @@ const Navbar = ({ platform }) => {
   return (
     <nav className="menuBar">
       <div className="logo">
-        <Link to="/">logo</Link>
+        <Link to="/">Trang chủ</Link>
       </div>
       <div className="menuCon">
         <div className="leftMenu">

@@ -1,15 +1,21 @@
 import React from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const PrivateRoute = ({ cookies, component: Component, ...rest }) => {
-  const { accessToken, isAuth } = cookies.cookies;
+const PrivateRoute = ({
+  cookies,
+  accessTokenStore,
+  component: Component,
+  ...rest
+}) => {
+  const accessToken = accessTokenStore || cookies.cookies.accessToken;
 
   return (
     <Route
       {...rest}
       render={props => {
-        if (accessToken && accessToken !== '' && isAuth === true) {
+        if (accessToken && accessToken !== '') {
           return <Component {...props} />;
         } else {
           return <Redirect to="/sign-in" />;
@@ -19,4 +25,8 @@ const PrivateRoute = ({ cookies, component: Component, ...rest }) => {
   );
 };
 
-export default withCookies(PrivateRoute);
+const mapStateToProps = ({ auth }) => {
+  return { accessTokenStore: auth.accessToken };
+};
+
+export default connect()(withCookies(PrivateRoute));

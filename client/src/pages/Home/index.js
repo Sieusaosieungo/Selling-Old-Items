@@ -1,55 +1,92 @@
 import React, { useState, useEffect } from 'react';
 import { withPlatform } from '../../context/platform';
 import { Tabs, message } from 'antd';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { withCookies } from 'react-cookie';
+import { connect } from 'react-redux';
+import Loadable from 'react-loadable';
 
 import './style.scss';
-import CategoryCard from '../../components/CategoryCard';
-import Category from '../../components/Category';
+
+import config from '../../utils/config';
+import changeToSlug from '../../utils/changeToSlug';
+import Loading from '../../components/Loading';
+
+const CategoryCard = Loadable({
+  loader: () => import('../../components/CategoryCard'),
+  loading: Loading,
+});
+const Category = Loadable({
+  loader: () => import('../../components/Category'),
+  loading: Loading,
+});
 
 const { TabPane } = Tabs;
 
 const prefixCls = 'home';
 
-const renderCategory = () => {};
+const renderCategory = (categories, tab) => {
+  let result = null;
 
-const Home = ({ platform }) => {
+  if (categories && categories.length > 0) {
+    result = categories.map(({ name, _id }, index) => (
+      <TabPane
+        key={changeToSlug(name)}
+        tab={<Link to={`/category/${changeToSlug(name)}`}>{name}</Link>}
+      >
+        <Category idCategory={_id} tab={tab} />
+      </TabPane>
+    ));
+  }
+
+  return result;
+};
+
+const Home = ({
+  platform,
+  cookies,
+  dispatch,
+  match: {
+    params: { tab },
+  },
+}) => {
   const mode = platform.isMobile ? 'top' : 'left';
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios({})
+    axios({
+      mehod: 'GET',
+      url: `${config.API_URL}/categories/`,
+    })
       .then(res => {
-        if (1) {
+        if (res.data.results.categories) {
+          setCategories(res.data.results.categories);
+          // console.log(res.data.results.categories);
         }
       })
       .catch(err => console.log(err));
-  }, [categories]);
+  }, []);
 
   return (
     <div className={`${prefixCls}`}>
-      <Tabs tabPosition={mode}>
-        <TabPane tab={`Trang chủ`} key={'trang-chu'}>
-          <CategoryCard categories={categories} />
+      <Tabs tabPosition={mode} activeKey={!tab ? 'trang-chu' : tab}>
+        <TabPane key={'trang-chu'}>
+          <CategoryCard />
         </TabPane>
-        <TabPane tab={`Bàn`} key={'ban'}>
-          <Category {...categories[0]} />
-        </TabPane>
-        <TabPane tab={`Quạt`} key={'quat'}>
-          <Category {...categories[0]} />
-        </TabPane>
-        <TabPane tab={`Đèn`} key={'den'}>
-          <Category {...categories[0]} />
-        </TabPane>
-        <TabPane tab={`Chuột`} key={'chuot'}>
-          <Category {...categories[0]} />
-        </TabPane>
-        <TabPane tab={`Tủ quần áo`} key={'tu-quan-ao'}>
-          <Category {...categories[0]} />
-        </TabPane>
+        {renderCategory(categories, tab)}
       </Tabs>
     </div>
   );
 };
 
-export default withPlatform(Home);
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch,
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(withCookies(withPlatform(Home)));

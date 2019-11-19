@@ -3,16 +3,27 @@ import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 import './style.scss';
 
 import config from '../../utils/config';
+import { signIn } from '../../actions';
 
 const prefixCls = 'sign-in';
 
-const SignIn = ({ form, form: { getFieldDecorator }, history }) => {
+const SignIn = ({
+  form,
+  form: { getFieldDecorator },
+  history,
+  dispatch,
+  location,
+  ...props
+}) => {
   const [cookies, setCookie, removeCookie] = useCookies('cookies');
   const { accessToken } = cookies;
+
+  console.log('history stack: ', history);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -24,10 +35,18 @@ const SignIn = ({ form, form: { getFieldDecorator }, history }) => {
           data: values,
         })
           .then(res => {
+            // console.log(res.data);
+
             setCookie('accessToken', res.data.results.token);
-            setCookie('isAuth', true);
             message.success('Đăng nhập thành công !');
-            history.goBack();
+
+            dispatch(signIn(res.data.results.token));
+
+            if (location.state.prevPath === '/sign-up') {
+              history.push('/');
+            } else {
+              history.goBack();
+            }
           })
           .catch(() => message.error('Sai tài khoản hoặc mật khẩu !'));
       }
@@ -90,6 +109,13 @@ const SignIn = ({ form, form: { getFieldDecorator }, history }) => {
   }
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch,
+  };
+};
 
-
-export default Form.create({ name: 'sign-in' })(SignIn);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Form.create({ name: 'sign-in' })(SignIn));

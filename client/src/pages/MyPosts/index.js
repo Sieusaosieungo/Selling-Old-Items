@@ -1,67 +1,98 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Divider, Tag, Button } from 'antd';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { withCookies } from 'react-cookie';
 
 import './style.scss';
+
+import config from '../../utils/config';
+import { numberToNumberWithCommas } from '../../utils/formatPrice';
 
 const prefixCls = 'my-posts';
 
 const columns = [
   {
-    title: 'Name',
+    title: 'Tên sản phẩm',
     dataIndex: 'name',
     key: 'name',
-    render: text => <a>{text}</a>,
+    render: (text, record) => (
+      <Link to={`/product-detail/${record._id}`}>{text}</Link>
+    ),
   },
   {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
+    title: 'Giá',
+    dataIndex: 'cost',
+    key: 'cost',
+    render: cost => `${numberToNumberWithCommas(cost)}đ`,
   },
   {
-    title: 'Description',
+    title: 'Ảnh',
+    dataIndex: 'images',
+    key: 'images',
+    render: imageUrls => (
+      <img
+        src={`${config.API_IMAGES}${imageUrls[0]}`}
+        style={{ width: '10rem', height: '10rem' }}
+      />
+    ),
+  },
+  {
+    title: 'Mô tả',
     dataIndex: 'description',
     key: 'description',
   },
   {
-    title: 'Action',
+    title: 'Thao tác',
     key: 'action',
     render: (text, record) => (
       <span>
-        <Button>Invite {record.name}</Button>
+        <Button type="primary" onClick={() => handleEdit(record._id)}>
+          Sửa
+        </Button>
         <Divider type="vertical" />
-        <Button>Delete</Button>
+        <Button type="danger" onClick={() => handleDelete(record._id)}>
+          Xóa
+        </Button>
       </span>
     ),
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'Bàn học sinh',
-    price: `${32000}đ`,
-    description: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Ghế học sinh',
-    price: 42,
-    description: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Giường đơn',
-    price: 32,
-    description: 'Sidney No. 1 Lake Park',
-  },
-];
+const handleEdit = productId => {
+  console.log('Editing: ', productId);
+};
 
-const MyPosts = ({}) => {
+const handleDelete = productId => {
+  console.log('Deleted: ', productId);
+};
+
+const MyPosts = ({ cookies }) => {
+  const [myPosts, setMyPosts] = useState([]);
+
+  const { accessToken } = cookies.cookies;
+
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: `${config.API_URL}/users/my-products`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then(res => {
+        if (res.data.results) {
+          setMyPosts(res.data.results.products);
+        }
+      })
+      .catch(err => console.log(err));
+  }, []);
+
   return (
     <div className={`${prefixCls}`}>
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={myPosts} columns={columns} size="small" />
     </div>
   );
 };
 
-export default MyPosts;
+export default withCookies(MyPosts);

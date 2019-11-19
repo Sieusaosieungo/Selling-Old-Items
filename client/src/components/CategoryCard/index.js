@@ -1,17 +1,21 @@
-import React from "react";
-import { Card } from "antd";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Card } from 'antd';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { connect } from 'react-redux';
 
-import "./style.scss";
+import './style.scss';
 
-import ProductItem from "../ProductItem";
+import config from '../../utils/config';
+import { updateState } from '../../actions';
+import ProductItem from '../ProductItem';
 
-const prefixCls = "category-card";
+const prefixCls = 'category-card';
 
 const renderProductItem = productItems => {
   let result = null;
 
-  if (productItems.length > 0) {
+  if (productItems && productItems.length > 0) {
     result = productItems.map((productItem, index) => (
       <ProductItem key={index} {...productItem} />
     ));
@@ -20,11 +24,11 @@ const renderProductItem = productItems => {
   return result;
 };
 
-const renderCategory = categories => {
+const renderCategory = categoryHome => {
   let result = null;
 
-  if (categories.length > 0) {
-    result = categories.map(({ titleCategory, to, productItems }, index) => (
+  if (categoryHome && categoryHome.length > 0) {
+    result = categoryHome.map(({ titleCategory, to, productItems }, index) => (
       <Card key={index} title={<Link to={to}>{titleCategory}</Link>}>
         {renderProductItem(productItems)}
       </Card>
@@ -34,8 +38,91 @@ const renderCategory = categories => {
   return result;
 };
 
-const Category = ({ categories }) => {
-  return <div className={`${prefixCls}`}>{renderCategory(categories)}</div>;
+const CategoryCard = ({ global, dispatch }) => {
+  const productsLatest = global['setProductsLatest'] || [];
+  const productsRateHigh = global['productsRateHigh'] || [];
+
+  const { timeToUpdateOld } = global['categoryHome'] || {};
+
+  const categoryHome = [
+    {
+      titleCategory: 'Sản phẩm mới nhất',
+      to: '/san-pham-moi-nhat',
+      productItems: productsLatest.products,
+    },
+    {
+      titleCategory: 'Sản phẩm được đánh giá cao',
+      to: '/san-pham-duoc-danh-gia-cao',
+      productItems: productsRateHigh.products,
+    },
+  ];
+
+  useEffect(() => {
+    if (
+      !timeToUpdateOld ||
+      Date.now() - timeToUpdateOld >= config.TIME_TO_UPDATE
+    ) {
+      axios({
+        method: 'GET',
+        url: `${config.API_URL}/products`,
+        params: {
+          category_id: '5dcab41c0a279700244222ff',
+        },
+      })
+        .then(res => {
+          if (res.data.results.products) {
+            const setProductsLatest = {
+              products: res.data.results.products,
+              timeToUpdateOld: Date.now(),
+            };
+
+            dispatch(
+              updateState({
+                setProductsLatest,
+              }),
+            );
+          }
+        })
+        .catch(err => console.log(err));
+
+      axios({
+        method: 'GET',
+        url: `${config.API_URL}/products`,
+        params: {
+          category_id: '5dcab41c0a279700244222ff',
+        },
+      })
+        .then(res => {
+          if (res.data.results.products) {
+            const productsRateHigh = {
+              products: res.data.results.products,
+              timeToUpdateOld: Date.now(),
+            };
+
+            dispatch(
+              updateState({
+                productsRateHigh,
+              }),
+            );
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  }, []);
+
+  return <div className={`${prefixCls}`}>{renderCategory(categoryHome)}</div>;
 };
 
-export default Category;
+const mapStateToProps = ({ global }) => {
+  return {
+    global,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryCard);

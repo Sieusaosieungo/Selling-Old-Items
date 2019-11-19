@@ -1,4 +1,4 @@
-import { STORE_USER } from '../constants/ActionTypes';
+import { STORE_USER, DELETE_USER } from '../constants/ActionTypes';
 
 const initialState = {};
 
@@ -7,7 +7,10 @@ const user = (state = initialState, action) => {
 
   switch (type) {
     case STORE_USER:
-      state = { state, ...user };
+      state = { ...state, ...user };
+      return state;
+    case DELETE_USER:
+      state = {};
       return state;
     default:
       return state;

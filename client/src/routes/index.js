@@ -31,13 +31,18 @@ const routes = [
     component: Home,
   },
   {
-    path: '/sign-up',
+    path: '/category/:tab',
+    component: Home,
+  },
+  {
+    path: '/account/sign-up',
     component: SignUp,
   },
   {
-    path: '/sign-in',
+    path: '/account/sign-in',
     component: SignIn,
   },
+
   {
     path: '/product-detail/:id',
     component: ProductDetail,

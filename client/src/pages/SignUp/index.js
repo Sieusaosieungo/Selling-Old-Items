@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Form, Button, Select, message } from 'antd';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -53,9 +53,8 @@ const Signup = ({ form: { getFieldDecorator }, form, history }) => {
           data: values,
         })
           .then(res => {
-            setCookie('accessToken', res.data.results.token);
             message.success('Đăng ký thành công !');
-            history.goBack();
+            history.push('/sign-in');
           })
           .catch(() => message.error('Lỗi đăng ký !'));
       }

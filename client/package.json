@@ -16,6 +16,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
     "trim-right": "^1.0.1"
   },
   "scripts": {
@@ -40,6 +41,13 @@
     ]
   },
   "devDependencies": {
+    "eslint": "6.6.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-config-prettier": "6.5.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-prettier": "3.1.1",
+    "prettier": "1.18.2",
+    "prettier-eslint-cli": "5.0.0",
     "react-codemod": "^5.1.0"
   }
 }

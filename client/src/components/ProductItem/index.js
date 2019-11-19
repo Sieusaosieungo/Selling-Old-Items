@@ -4,19 +4,22 @@ import { Card } from 'antd';
 
 import './style.scss';
 
+import config from '../../utils/config';
+import { numberToNumberWithCommas } from '../../utils/formatPrice';
+
 const { Meta } = Card;
 
 const prefixCls = 'category-item';
 
-const ProductItem = ({ id, name, image, price = 0 }) => {
+const ProductItem = ({ _id, name, images, cost = 0 }) => {
   return (
-    <Link to={`/product-detail/${id}`} className={`${prefixCls}`}>
+    <Link to={`/product-detail/${_id}`} className={`${prefixCls}`}>
       <Card
         className={`${prefixCls}-card`}
         hoverable
-        cover={<img alt={name} src={image} />}
+        cover={<img alt={name} src={`${config.API_IMAGES}/${images[0]}`} />}
       >
-        <Meta title={name} description={`${price}đ`} />
+        <Meta title={name} description={`${numberToNumberWithCommas(cost)}đ`} />
       </Card>
     </Link>
   );

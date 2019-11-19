@@ -24,6 +24,14 @@
     grid-column: 2/10;
     grid-row: 2/3;
     box-shadow: 0 0 1rem 1px rgb(212, 212, 212);
+
+    > .cart-empty {
+      font-size: 2rem;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   .cart-payment-side {

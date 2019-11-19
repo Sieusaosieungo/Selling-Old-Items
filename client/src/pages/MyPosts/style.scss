@@ -1,3 +1,19 @@
 .my-posts {
   margin: 1rem;
+
+  .ant-table-thead {
+    > tr {
+      > th {
+        text-align: center;
+      }
+    }
+  }
+
+  .ant-table-tbody {
+    > tr {
+      > td {
+        text-align: center;
+      }
+    }
+  }
 }

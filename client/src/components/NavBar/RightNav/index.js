@@ -1,5 +1,4 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { withCookies, useCookies } from 'react-cookie';
 import { Menu, Avatar, Icon, Dropdown, message } from 'antd';
@@ -9,7 +8,7 @@ import { connect } from 'react-redux';
 import './style.scss';
 
 import config from '../../../utils/config';
-import { storeUser } from '../../../actions';
+import { storeUser, signIn, deleteUser, signOut } from '../../../actions';
 
 const Submenu = logOut => {
   return (
@@ -24,7 +23,7 @@ const Submenu = logOut => {
         <Link to="/user/cart">Giỏ hàng</Link>
       </Menu.Item>
       <Menu.Item key="3">
-        <Link to="/user/my-post">Bài đăng của tôi</Link>
+        <Link to="/user/my-posts">Bài đăng của tôi</Link>
       </Menu.Item>
       <Menu.Item key="4">
         <Link to="" onClick={logOut}>
@@ -35,14 +34,24 @@ const Submenu = logOut => {
   );
 };
 
-const RightMenu = ({ mode, user, storeUser, isAuth }) => {
+const RightMenu = ({ mode, user, accessTokenStore, dispatch }) => {
   const [cookies, setCookie, removeCookie] = useCookies('cookies');
 
-  const { accessToken } = cookies;
+  const accessToken = accessTokenStore || cookies.accessToken;
+
+  // if (accessToken === accessTokenStore) {
+  //   console.log('match accessTokenStore');
+  // } else {
+  //   console.log('match cookies.accessToken');
+  // }
+
+  // console.log('Right nav: ', accessToken);
 
   const logOut = () => {
     removeCookie('accessToken');
-    removeCookie('isAuth');
+    dispatch(deleteUser());
+    // dispatch(signOut());
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -56,49 +65,68 @@ const RightMenu = ({ mode, user, storeUser, isAuth }) => {
       })
         .then(res => {
           if (res.data.results.user) {
-            storeUser(res.data.results.user);
+            // console.log('user info after call axios: ', res.data.results.user);
+            dispatch(storeUser(res.data.results.user));
+            // dispatch(signIn(accessToken));
           }
         })
-        .catch(() => message.error('Signin failed !'));
+        .catch(() => {
+          logOut();
+        });
+
+      // window.location.reload();
     }
-  }, [isAuth, accessToken]);
+  }, [accessToken]);
 
   return (
     <Menu mode={mode} selectedKeys={[]}>
-      {accessToken && (
+      {Object.keys(user).length > 0 && (
         <Menu.Item key="sign-out" className="avatar">
-          <Avatar src={'image'} />
+          <Avatar
+            src={
+              user.images ||
+              'https://cdn.eva.vn/upload/4-2019/images/2019-11-06/sinh-ra-trong-gia-dinh-viet-nhung-co-be-nay-lai-mang-ve-dep-tay-la-ky-untitled-19-1573053449-116-width600height750.jpg'
+            }
+          />
           <Dropdown overlay={() => Submenu(logOut)}>
             <Link className="ant-dropdown-link" to="/user/profile">
-              Huynh <Icon type="down" />
+              {user.full_name} <Icon type="down" />
             </Link>
           </Dropdown>
         </Menu.Item>
       )}
-      {!accessToken && (
+      {!(Object.keys(user).length > 0) && (
         <Menu.Item key="sign-in">
-          <Link to="/sign-in">Signin</Link>
+          <Link
+            to={location => ({
+              ...location,
+              pathname: '/account/sign-in',
+              state: { prevPath: location.pathname },
+            })}
+          >
+            Signin
+          </Link>
         </Menu.Item>
       )}
-      {!accessToken && (
+      {!(Object.keys(user).length > 0) && (
         <Menu.Item key="sign-up">
-          <Link to="/sign-up">Signup</Link>
+          <Link to="/account/sign-up">Signup</Link>
         </Menu.Item>
       )}
     </Menu>
   );
 };
 
-const mapStateToProps = ({ user, isAuth }) => {
+const mapStateToProps = ({ user, auth }) => {
   return {
     user,
-    isAuth,
+    accessTokenStore: auth.accessToken,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    storeUser: user => dispatch(storeUser(user)),
+    dispatch,
   };
 };
 

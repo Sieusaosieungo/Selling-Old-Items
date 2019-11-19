@@ -1,18 +1,17 @@
 import { SIGN_IN, SIGN_OUT } from '../constants/ActionTypes';
 
-const initialState = false;
+const initialState = {
+  accessToken: '',
+};
 
 const auth = (state = initialState, action) => {
-  const { type } = action;
+  const { type, accessToken } = action;
+
+  // console.log('authenticated: ', accessToken);
 
   switch (type) {
     case SIGN_IN:
-      state = true;
-      return state;
-    case SIGN_OUT:
-      state = false;
-      return state;
-
+      return { ...state, accessToken };
     default:
       return state;
   }

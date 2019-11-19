@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Form, Select, Button, Upload, Icon, message } from 'antd';
+import axios from 'axios';
 
 import './style.scss';
+
+import config from '../../utils/config';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -42,6 +45,8 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
     },
   ]);
 
+  const [categories, setCategories] = useState([]);
+
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
@@ -58,6 +63,20 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
     }
     return e && e.fileList;
   };
+
+  useEffect(() => {
+    axios({
+      mehod: 'GET',
+      url: `${config.API_URL}/categories/`,
+    })
+      .then(res => {
+        if (res.data.results.categories) {
+          setCategories(res.data.results.categories);
+          console.log(res.data.results.categories);
+        }
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <div className={`${prefixCls}`}>
@@ -103,12 +122,11 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
             rules: [{ required: true, message: 'Danh mục không được trống !' }],
           })(
             <Select placeholder="Chọn danh mục">
-              <Option value="ban">Bàn</Option>
-              <Option value="ghe">Ghế</Option>
-              <Option value="tu-lanh">Tủ lạnh</Option>
-              <Option value="giuong">Giường</Option>
-              <Option value="ti-vi">Tv</Option>
-              <Option value="dieu-hoa">Điều hòa</Option>
+              {categories.map(({ name }, index) => (
+                <Option key={index} value={name}>
+                  {name}
+                </Option>
+              ))}
             </Select>,
           )}
         </Form.Item>
