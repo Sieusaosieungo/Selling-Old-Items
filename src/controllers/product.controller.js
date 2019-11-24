@@ -97,8 +97,6 @@ async function addProductToCart(req, res) {
       quantity: 1,
     });
   } else {
-    cart.total_money += product.cost;
-
     const cartDetail = await CartDetail.findOne({
       cart_id: cart._id,
       product_id,
@@ -111,9 +109,13 @@ async function addProductToCart(req, res) {
         quantity: 1,
       });
     } else {
-      cartDetail.quantity += 1;
-      await cartDetail.save();
+      throw new CustomError(
+        errorCode.BAD_REQUEST,
+        'Sản phẩm đã có trong giỏ hàng',
+      );
     }
+
+    cart.total_money += product.cost;
 
     await cart.save();
   }
