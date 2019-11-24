@@ -11,7 +11,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    images: {
+    mainImage: {
+      type: String,
+    },
+    attachImages: {
       type: [String],
     },
     cost: {
@@ -34,6 +37,26 @@ const productSchema = new mongoose.Schema(
     category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
+    },
+    rates: [
+      {
+        user_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'User',
+        },
+        point: {
+          type: Number,
+        },
+        lastUpdated: {
+          type: Date,
+        },
+        _id: false,
+      },
+    ],
+    averagePoint: {
+      type: Number,
+      default: 0,
     },
   },
   {
