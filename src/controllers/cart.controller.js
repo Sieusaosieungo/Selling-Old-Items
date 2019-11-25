@@ -33,51 +33,51 @@ async function getCartByUser(req, res) {
   });
 }
 
-async function increaseProductToCart(req, res) {
-  const { product_id } = req.body;
-  const cart = await Cart.findOne({ user_id: req.user._id });
-  const product = await Product.findById(product_id);
-  const cartDetail = await CartDetail.findOne({
-    cart_id: cart._id,
-    product_id,
-  });
+// async function increaseProductToCart(req, res) {
+//   const { product_id } = req.body;
+//   const cart = await Cart.findOne({ user_id: req.user._id });
+//   const product = await Product.findById(product_id);
+//   const cartDetail = await CartDetail.findOne({
+//     cart_id: cart._id,
+//     product_id,
+//   });
 
-  cartDetail.quantity += 1;
-  await cartDetail.save();
+//   cartDetail.quantity += 1;
+//   await cartDetail.save();
 
-  cart.total_money += product.cost;
-  await cart.save();
+//   cart.total_money += product.cost;
+//   await cart.save();
 
-  res.send({
-    status: 1,
-    results: {
-      quantity: cartDetail.quantity,
-    },
-  });
-}
+//   res.send({
+//     status: 1,
+//     results: {
+//       quantity: cartDetail.quantity,
+//     },
+//   });
+// }
 
-async function decreaseProductToCart(req, res) {
-  const { product_id } = req.body;
-  const cart = await Cart.findOne({ user_id: req.user._id });
-  const product = await Product.findById(product_id);
-  const cartDetail = await CartDetail.findOne({
-    cart_id: cart._id,
-    product_id,
-  });
+// async function decreaseProductToCart(req, res) {
+//   const { product_id } = req.body;
+//   const cart = await Cart.findOne({ user_id: req.user._id });
+//   const product = await Product.findById(product_id);
+//   const cartDetail = await CartDetail.findOne({
+//     cart_id: cart._id,
+//     product_id,
+//   });
 
-  cartDetail.quantity -= 1;
-  await cartDetail.save();
+//   cartDetail.quantity -= 1;
+//   await cartDetail.save();
 
-  cart.total_money -= product.cost;
-  await cart.save();
+//   cart.total_money -= product.cost;
+//   await cart.save();
 
-  res.send({
-    status: 1,
-    results: {
-      quantity: cartDetail.quantity,
-    },
-  });
-}
+//   res.send({
+//     status: 1,
+//     results: {
+//       quantity: cartDetail.quantity,
+//     },
+//   });
+// }
 
 async function deleteProductOnCart(req, res) {
   const { product_id } = req.body;
@@ -119,7 +119,5 @@ async function deleteProductOnCart(req, res) {
 
 module.exports = {
   getCartByUser,
-  increaseProductToCart,
-  decreaseProductToCart,
   deleteProductOnCart,
 };
