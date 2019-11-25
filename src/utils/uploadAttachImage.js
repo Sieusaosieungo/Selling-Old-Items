@@ -67,7 +67,7 @@ const uploadAttachImage = async (imageFile, relativePath) => {
   await Promise.all(
     fs.readdirSync(absolutePath).map(async imageUnziped => {
       if (imageUnziped.match(/\.(jpg|png|jpeg)$/)) {
-        imageLinks.push(`${relativePath}/${imageUnziped}`);
+        imageLinks.push(`${relativePath}/${random}/${imageUnziped}`);
       }
     }),
   );
