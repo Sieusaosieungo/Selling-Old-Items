@@ -26,7 +26,7 @@ async function addProduct(req, res) {
 
   const mainImage = await uploadMainImage(
     productMainImage,
-    'images/product/main',
+    '/images/product/main',
   );
 
   const attachImages = await uploadAttachImages(
