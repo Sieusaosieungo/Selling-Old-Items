@@ -129,14 +129,14 @@ async function getProductsOfUser(req, res) {
       if (user) {
         userName = user.full_name;
       }
-      return { ...pdt, buyer: { ...pdt.buyer, boughtName: userName } };
+      return { ...pdt.lean(), buyer: { ...pdt.buyer, boughtName: userName } };
     }),
   );
 
   res.send({
     status: 1,
     results: {
-      products: productsDetail.lean(),
+      products: productsDetail,
     },
   });
 }
