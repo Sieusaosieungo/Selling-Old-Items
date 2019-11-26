@@ -39,11 +39,9 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
       trim: true,
-      required: true,
     },
     phone: {
       type: String,
-      required: true,
     },
     tokens: [
       {
