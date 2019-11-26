@@ -39,8 +39,14 @@ const productSchema = new mongoose.Schema(
         user_id: {
           type: mongoose.Schema.Types.ObjectId,
         },
+        author: {
+          type: String,
+        },
         content: {
           type: String,
+        },
+        datetime: {
+          type: Date,
         },
         _id: false,
       },
