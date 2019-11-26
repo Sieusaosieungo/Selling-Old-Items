@@ -121,7 +121,7 @@ async function updateInfoUser(req, res) {
 }
 
 async function getProductsOfUser(req, res) {
-  const products = await Product.find({ user_id: req.user._id });
+  const products = await Product.find({ user_id: req.user._id }).lean();
   const productsDetail = await Promise.all(
     products.map(async pdt => {
       const user = await User.findById(pdt.buyer.user_id);
