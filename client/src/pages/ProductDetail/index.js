@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment, useState } from 'react';
-import { useCookies } from 'react-cookie';
+import { useCookies, withCookies } from 'react-cookie';
 import moment from 'moment';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -55,17 +55,16 @@ const ProductDetail = ({
   match: {
     params: { id },
   },
+  cookies,
 }) => {
   const [stateComment, setStateComment] = useState({
     comments: [],
     submitting: false,
     value: '',
   });
-  const [quantity, setQuantity] = useState(1);
   const [productItem, setProductItem] = useState({});
-  const [cookies, setCookie, removeCookie] = useCookies('cookies');
 
-  const { accessToken } = cookies;
+  const { accessToken } = cookies.cookies;
 
   const handleSubmit = () => {
     if (!stateComment.value) {
@@ -115,13 +114,16 @@ const ProductDetail = ({
     })
       .then(res => {
         message.success(`Thêm sản phẩm vào giỏ hàng thành công !`);
-        // message.info(
-        //   `Click để đi đến giỏ hàng: ${(<Link to={'/user/cart'}>Click</Link>)}`,
-        // );
 
         // console.log('product detail info =', res.data);
       })
-      .catch(err => message.warning('Cần đăng nhập để thêm vào giỏ hàng !'));
+      .catch(err => {
+        if (accessToken) {
+          message.warning('Sản phẩm đã có trong giỏ hàng !');
+        } else {
+          message.warning('Cần đăng nhập để thêm vào giỏ hàng !');
+        }
+      });
   };
 
   useEffect(() => {
@@ -144,7 +146,7 @@ const ProductDetail = ({
         <div className={`${prefixCls}`}>
           <div className={`${prefixCls}-image`}>
             <img
-              src={`${config.API_IMAGES}${productItem.images[0]}`}
+              src={`${config.API_IMAGES}/${productItem.mainImage}`}
               alt={productItem.name}
             />
           </div>
@@ -162,7 +164,7 @@ const ProductDetail = ({
             </div>
             <div className={`${prefixCls}-quantity`}>
               <Button onClick={handleAddToCart} type="primary">
-                Add to cart
+                Thêm vào giỏ
               </Button>
             </div>
           </div>
@@ -203,4 +205,4 @@ const ProductDetail = ({
   }
 };
 
-export default ProductDetail;
+export default withCookies(ProductDetail);

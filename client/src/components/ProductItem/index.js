@@ -11,13 +11,13 @@ const { Meta } = Card;
 
 const prefixCls = 'category-item';
 
-const ProductItem = ({ _id, name, images, cost = 0 }) => {
+const ProductItem = ({ _id, name, mainImage, cost = 0 }) => {
   return (
     <Link to={`/product-detail/${_id}`} className={`${prefixCls}`}>
       <Card
         className={`${prefixCls}-card`}
         hoverable
-        cover={<img alt={name} src={`${config.API_IMAGES}/${images[0]}`} />}
+        cover={<img alt={name} src={`${config.API_IMAGES}${mainImage}`} />}
       >
         <Meta title={name} description={`${numberToNumberWithCommas(cost)}đ`} />
       </Card>

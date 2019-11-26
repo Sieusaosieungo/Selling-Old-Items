@@ -25,22 +25,27 @@
       font-size: 2rem;
     }
 
+    > a:hover {
+      color: #4c97ff;
+    }
+
     > span {
+      margin-top: 0.5rem;
       grid-column: 8/10;
       grid-row: 1/2;
       font-weight: 650;
     }
 
-    .cart-item-quantity {
-      display: flex;
-      justify-content: center;
-      grid-column: 10/13;
-      grid-row: 1/2;
-    }
+    // .cart-item-quantity {
+    //   display: flex;
+    //   justify-content: center;
+    //   grid-column: 10/13;
+    //   grid-row: 1/2;
+    // }
 
     > .cart-item-btn {
       grid-column: 10/13;
-      grid-row: 2/3;
+      grid-row: 1/2;
       display: flex;
       justify-content: center;
       margin-top: 0.5rem;
