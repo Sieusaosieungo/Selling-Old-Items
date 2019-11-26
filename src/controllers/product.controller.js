@@ -178,8 +178,13 @@ async function approvedSellProduct(req, res) {
 
   await product.save();
 
+  const products = await Product.find({ user_id: req.user._id });
+
   res.send({
     status: 1,
+    results: {
+      products,
+    },
   });
 }
 
@@ -200,8 +205,13 @@ async function rejectSellProduct(req, res) {
 
   await product.save();
 
+  const products = await Product.find({ user_id: req.user._id });
+
   res.send({
     status: 1,
+    results: {
+      products,
+    },
   });
 }
 
