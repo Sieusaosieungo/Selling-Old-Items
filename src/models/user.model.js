@@ -9,11 +9,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       lowercase: true,
+      required: true,
+      unique: true,
     },
     password: {
       type: String,
       trim: true,
       minlength: 7,
+      required: true,
     },
     role: {
       type: Number,
@@ -23,6 +26,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: 50,
+      required: true,
     },
     gender: {
       type: String,
@@ -30,6 +34,16 @@ const userSchema = new mongoose.Schema(
     student_id: {
       type: String,
       trim: true,
+      required: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
     },
     tokens: [
       {

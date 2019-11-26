@@ -52,7 +52,7 @@ async function addProduct(req, res) {
 
 async function getProductsByCategory(req, res) {
   const { category_id } = req.query;
-  const products = await Product.find({ category_id });
+  const products = await Product.find({ category_id, status: 'new' });
 
   res.send({
     status: 1,
@@ -157,10 +157,54 @@ async function evaluateProduct(req, res) {
   });
 }
 
+async function approvedSellProduct(req, res) {
+  const { product_id } = req.body;
+  const product = await Product.findById(product_id);
+  if (product.user_id.toString() !== req.user._id.toString()) {
+    throw new CustomError(errorCode.FORBIDDEN);
+  }
+
+  if (product.status !== 'pending') {
+    throw new CustomError(errorCode.FORBIDDEN);
+  }
+
+  product.status = 'sold';
+
+  await product.save();
+
+  res.send({
+    status: 1,
+  });
+}
+
+async function rejectSellProduct(req, res) {
+  const { product_id } = req.body;
+
+  const product = await Product.findById(product_id);
+  if (product.user_id.toString() !== req.user._id.toString()) {
+    throw new CustomError(errorCode.FORBIDDEN);
+  }
+
+  if (product.status !== 'pending') {
+    throw new CustomError(errorCode.FORBIDDEN);
+  }
+
+  product.status = 'new';
+  product.buyer = null;
+
+  await product.save();
+
+  res.send({
+    status: 1,
+  });
+}
+
 module.exports = {
   addProduct,
   getProductsByCategory,
   getProductById,
   addProductToCart,
   evaluateProduct,
+  approvedSellProduct,
+  rejectSellProduct,
 };

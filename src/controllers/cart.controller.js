@@ -117,7 +117,34 @@ async function deleteProductOnCart(req, res) {
   });
 }
 
+async function pay(req, res) {
+  const cart = await Cart.findOne({ user_id: req.user._id });
+  const listCartDetail = await CartDetail.find({
+    cart_id: cart._id,
+  });
+
+  await Promise.all(
+    listCartDetail.map(async cartDetail => {
+      const product = await Product.findById(cartDetail.product_id);
+
+      product.status = 'pending';
+      product.buyer.user_id = req.user._id;
+
+      product.buyer.timeBought = Date.now();
+      await product.save();
+    }),
+  );
+
+  await CartDetail.deleteMany({ cart_id: cart._id });
+  await Cart.deleteOne({ user_id: req.user._id });
+
+  res.send({
+    status: 1,
+  });
+}
+
 module.exports = {
   getCartByUser,
   deleteProductOnCart,
+  pay,
 };
