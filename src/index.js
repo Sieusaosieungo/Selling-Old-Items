@@ -8,6 +8,8 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
+const axios = require('axios');
+
 const port = process.env.PORT;
 const errorHandler = require('./middlewares/errorHanlder');
 
@@ -32,6 +34,22 @@ app.use('/api/carts', require('./routes/cart.route'));
 
 app.use(express.static(path.join(__dirname, '../static')));
 app.use(errorHandler);
+
+setInterval(function() {
+  axios
+    .get('https://sell-old-items.herokuapp.com/api/categories/')
+    .then(function(response) {
+      // handle success
+      console.log(response.data);
+    })
+    .catch(function(error) {
+      // handle error
+      console.log(error);
+    })
+    .finally(function() {
+      // always executed
+    });
+}, 300000);
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
