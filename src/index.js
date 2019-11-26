@@ -1,6 +1,6 @@
 require('dotenv').config();
 require('./db/mongoose');
-const fs = require('fs-extra');
+// const fs = require('fs-extra');
 
 const express = require('express');
 const fileUpload = require('express-fileupload');
@@ -20,15 +20,15 @@ app.use('/api/categories', require('./routes/category.route'));
 app.use('/api/products', require('./routes/product.route'));
 app.use('/api/carts', require('./routes/cart.route'));
 
-app.delete('/delete', (req, res) => {
-  const staticPath = path.join(__dirname, '../static');
+// app.delete('/delete', (req, res) => {
+//   const staticPath = path.join(__dirname, '../static');
 
-  fs.remove(staticPath);
+//   fs.remove(staticPath);
 
-  res.send({
-    status: 1,
-  });
-});
+//   res.send({
+//     status: 1,
+//   });
+// });
 
 app.use(express.static(path.join(__dirname, '../static')));
 app.use(errorHandler);

@@ -38,10 +38,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    rating_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Rate',
-    },
     category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',

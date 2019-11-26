@@ -54,7 +54,6 @@ async function addProduct(req, res) {
 //   const { product_id } = req.body;
 //   const prodcut = await Product.findawait Product.findByIdAndDelete(product_id);
 
-
 // }
 
 async function getProductsByCategory(req, res) {
