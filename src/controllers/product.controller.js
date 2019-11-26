@@ -50,6 +50,13 @@ async function addProduct(req, res) {
   });
 }
 
+// async function updateProduct(req, res) {
+//   const { product_id } = req.body;
+//   const prodcut = await Product.findawait Product.findByIdAndDelete(product_id);
+
+
+// }
+
 async function getProductsByCategory(req, res) {
   const { category_id } = req.query;
   const products = await Product.find({ category_id, status: 'new' });
@@ -152,7 +159,7 @@ async function evaluateProduct(req, res) {
   res.send({
     status: 1,
     results: {
-      averagePoint: product.averagePoint,
+      product,
     },
   });
 }
