@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Form, Select, Button, Upload, Icon, message } from 'antd';
+import { withCookies } from 'react-cookie';
 import axios from 'axios';
+import {
+  Input,
+  Form,
+  Select,
+  Button,
+  Upload,
+  Icon,
+  message,
+  Modal,
+} from 'antd';
 
 import './style.scss';
 
@@ -35,44 +45,58 @@ const tailFormItemLayout = {
   },
 };
 
-const PostProduct = ({ form: { getFieldDecorator }, form }) => {
-  const [fileList, setFileList] = useState([
-    {
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'http://www.baidu.com/xxx.png',
-    },
-  ]);
-
+const PostProduct = ({
+  form: { getFieldDecorator },
+  form,
+  cookies: { cookies },
+}) => {
   const [categories, setCategories] = useState([]);
+  const [images, setImages] = useState({});
+
+  const { accessToken } = cookies;
 
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        axios({
+          method: 'POST',
+          url: `${config.API_URL}/products/`,
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          data: values,
+        })
+          .then(res => {
+            if (res.data.results) {
+              // setCategories(res.data.results.);
+              console.log('product uploaded: ', res.data);
+            }
+          })
+          .catch(err => console.log(err));
       }
     });
   };
 
-  const normFile = e => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
+  const onChange = e => {
+    const { name, files } = e.target;
+    setImages({ ...images, [name]: files[0] });
   };
 
   useEffect(() => {
     axios({
       mehod: 'GET',
       url: `${config.API_URL}/categories/`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
     })
       .then(res => {
         if (res.data.results.categories) {
           setCategories(res.data.results.categories);
-          console.log(res.data.results.categories);
+          // console.log(res.data.results.categories);
         }
       })
       .catch(err => console.log(err));
@@ -82,7 +106,7 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
     <div className={`${prefixCls}`}>
       <Form {...formItemLayout} onSubmit={handleSubmit}>
         <Form.Item label="Tên sản phẩm:">
-          {getFieldDecorator('ten-san-pham', {
+          {getFieldDecorator('name', {
             rules: [
               {
                 required: true,
@@ -91,39 +115,45 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
             ],
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="Ảnh:">
-          {getFieldDecorator('anh', {
-            valuePropName: 'fileList',
-            getValueFromEvent: normFile,
-          })(
-            <Upload
-              name="avatar"
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              listType="picture"
-            >
-              <Button>
-                <Icon type="upload" /> Click to upload
-              </Button>
-            </Upload>,
-          )}
+        <Form.Item label="Ảnh chính:">
+          <label className="upload-btn-wrapper">
+            <input
+              type="file"
+              required
+              onChange={onChange}
+              name="productMainImage"
+            />
+            <span>Tải lên ảnh</span>
+          </label>
         </Form.Item>
-        <Form.Item label="Số lượng:">
-          {getFieldDecorator('so-luong', {
+        <Form.Item label="Ảnh phụ:">
+          <label className="upload-btn-wrapper">
+            <input
+              type="file"
+              required
+              onChange={onChange}
+              name="productAttachImages"
+            />
+            <span>Tải lên file .zip</span>
+          </label>
+        </Form.Item>
+        <Form.Item label="Giá:">
+          {getFieldDecorator('cost', {
             rules: [
               {
                 required: true,
-                message: 'Số lượng không được để trống !',
+                message: 'Giá không được để trống !',
               },
             ],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Danh mục" hasFeedback>
-          {getFieldDecorator('danh-muc', {
+          {getFieldDecorator('category_id', {
             rules: [{ required: true, message: 'Danh mục không được trống !' }],
           })(
             <Select placeholder="Chọn danh mục">
-              {categories.map(({ name }, index) => (
-                <Option key={index} value={name}>
+              {categories.map(({ name, _id }, index) => (
+                <Option key={index} value={_id}>
                   {name}
                 </Option>
               ))}
@@ -131,7 +161,7 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
           )}
         </Form.Item>
         <Form.Item label="Mô tả:">
-          {getFieldDecorator('mo-ta', {
+          {getFieldDecorator('description', {
             rules: [
               {
                 required: true,
@@ -150,4 +180,4 @@ const PostProduct = ({ form: { getFieldDecorator }, form }) => {
   );
 };
 
-export default Form.create({ name: 'sign-up' })(PostProduct);
+export default withCookies(Form.create({ name: 'sign-up' })(PostProduct));

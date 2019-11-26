@@ -1,7 +1,7 @@
-import React from "react";
-import { Input } from "antd";
+import React from 'react';
+import { Input } from 'antd';
 
-import "./styles.scss";
+import './styles.scss';
 
 const { Search } = Input;
 
@@ -12,7 +12,7 @@ const SearchInput = () => {
 
   return (
     <Search
-      placeholder="Input product name"
+      placeholder="Nhập tên sản phẩm"
       onSearch={onSearch}
       enterButton
       onPressEnter={onSearch}

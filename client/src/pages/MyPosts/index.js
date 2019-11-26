@@ -28,11 +28,11 @@ const columns = [
   },
   {
     title: 'Ảnh',
-    dataIndex: 'images',
-    key: 'images',
-    render: imageUrls => (
+    dataIndex: 'mainImage',
+    key: 'mainImage',
+    render: mainImage => (
       <img
-        src={`${config.API_IMAGES}${imageUrls[0]}`}
+        src={`${config.API_IMAGES}/${mainImage}`}
         style={{ width: '10rem', height: '10rem' }}
       />
     ),
@@ -83,6 +83,7 @@ const MyPosts = ({ cookies }) => {
       .then(res => {
         if (res.data.results) {
           setMyPosts(res.data.results.products);
+          console.log('my posts: ', res.data.results.products);
         }
       })
       .catch(err => console.log(err));
