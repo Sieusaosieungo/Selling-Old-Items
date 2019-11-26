@@ -70,7 +70,21 @@ async function getInfoUser(req, res) {
 }
 
 async function updateInfoUser(req, res) {
-  const { full_name, gender, oldPassword, newPassword } = req.body;
+  if (req.body.email || req.body.student_id) {
+    throw new CustomError(
+      errorCode.BAD_REQUEST,
+      'Bạn không thể thay đổi email hoặc MSSV',
+    );
+  }
+
+  const {
+    full_name,
+    gender,
+    oldPassword,
+    newPassword,
+    phone,
+    address,
+  } = req.body;
 
   if (oldPassword && newPassword) {
     const isMatch = await bcrypt.compare(oldPassword, req.user.password);
@@ -91,13 +105,10 @@ async function updateInfoUser(req, res) {
     req.user.password = newPassword;
   }
 
-  if (full_name && full_name !== req.user.full_name) {
-    req.user.full_name = full_name;
-  }
-
-  if (gender && gender !== req.user.gender) {
-    req.user.gender = gender;
-  }
+  req.user.full_name = full_name;
+  req.user.gender = gender;
+  req.user.address = address;
+  req.user.phone = phone;
 
   await req.user.save();
 

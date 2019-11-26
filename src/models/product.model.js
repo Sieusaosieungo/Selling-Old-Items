@@ -26,6 +26,14 @@ const productSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
+    buyer: {
+      user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+      timeBought: {
+        type: Date,
+      },
+    },
     status: {
       type: String,
       required: true,
