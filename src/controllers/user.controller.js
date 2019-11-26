@@ -124,7 +124,7 @@ async function getProductsOfUser(req, res) {
   const products = await Product.find({ user_id: req.user._id });
   const productsDetail = await Promise.all(
     products.map(async pdt => {
-      const user = await User.findById(pdt.buyer.user_id).lean();
+      const user = await User.findById(pdt.buyer.user_id);
       let userName = null;
       if (user) {
         userName = user.full_name;
@@ -136,7 +136,7 @@ async function getProductsOfUser(req, res) {
   res.send({
     status: 1,
     results: {
-      products: productsDetail,
+      products: productsDetail.lean(),
     },
   });
 }
