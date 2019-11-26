@@ -125,7 +125,11 @@ async function getProductsOfUser(req, res) {
   const productsDetail = await Promise.all(
     products.map(async pdt => {
       const user = await User.findById(pdt.buyer.user_id);
-      return { ...pdt, buyer: { ...pdt.buyer, boughtName: user.full_name } };
+      let userName = null;
+      if (user) {
+        userName = user.full_name;
+      }
+      return { ...pdt, buyer: { ...pdt.buyer, boughtName: userName } };
     }),
   );
 
