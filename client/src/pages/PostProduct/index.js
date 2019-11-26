@@ -59,6 +59,16 @@ const PostProduct = ({
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log('product before upload:', { ...values, ...images });
+
+        const formData = new FormData();
+        formData.set('name', values.name);
+        formData.set('category_id', values.category_id);
+        formData.set('cost', values.cost);
+        formData.set('description', values.description);
+        formData.append('productMainImage', images.productMainImage);
+        formData.append('productAttachImages', images.productAttachImages);
+
         axios({
           method: 'POST',
           url: `${config.API_URL}/products/`,
@@ -66,12 +76,13 @@ const PostProduct = ({
             authorization: `Bearer ${accessToken}`,
             'Content-Type': 'multipart/form-data',
           },
-          data: values,
+          data: formData,
         })
           .then(res => {
             if (res.data.results) {
               // setCategories(res.data.results.);
               console.log('product uploaded: ', res.data);
+              message.success('Đăng sản phẩm thành công !');
             }
           })
           .catch(err => console.log(err));
