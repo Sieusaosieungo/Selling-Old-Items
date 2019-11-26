@@ -9,6 +9,7 @@ const path = require('path');
 
 const app = express();
 const axios = require('axios');
+const cron = require('node-cron');
 
 const port = process.env.PORT;
 const errorHandler = require('./middlewares/errorHanlder');
@@ -31,13 +32,9 @@ app.use('/api/carts', require('./routes/cart.route'));
 //     status: 1,
 //   });
 // });
-
-app.use(express.static(path.join(__dirname, '../static')));
-app.use(errorHandler);
-
-setInterval(function() {
+cron.schedule('* * * * *', function() {
   axios
-    .get('https://sell-old-items.herokuapp.com/api/categories/')
+    .get('https://sell-old-items.herokuapp.com/api/categories')
     .then(function(response) {
       // handle success
       console.log(response.data);
@@ -49,7 +46,10 @@ setInterval(function() {
     .finally(function() {
       // always executed
     });
-}, 300000);
+});
+
+app.use(express.static(path.join(__dirname, '../static')));
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
