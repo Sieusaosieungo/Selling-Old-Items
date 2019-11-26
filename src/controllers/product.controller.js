@@ -205,6 +205,22 @@ async function rejectSellProduct(req, res) {
   });
 }
 
+async function addComment(req, res) {
+  const { product_id, content } = req.body;
+  const product = await Product.findById(product_id);
+
+  product.comments.push({ user_id: req.user._id, content });
+
+  await product.save();
+
+  res.send({
+    status: 1,
+    results: {
+      product,
+    },
+  });
+}
+
 module.exports = {
   addProduct,
   getProductsByCategory,
@@ -213,4 +229,5 @@ module.exports = {
   evaluateProduct,
   approvedSellProduct,
   rejectSellProduct,
+  addComment,
 };

@@ -34,6 +34,17 @@ const productSchema = new mongoose.Schema(
         type: Date,
       },
     },
+    comments: [
+      {
+        user_id: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+        content: {
+          type: String,
+        },
+        _id: false,
+      },
+    ],
     status: {
       type: String,
       required: true,
