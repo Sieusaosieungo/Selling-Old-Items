@@ -11,6 +11,7 @@ const {
   getInfoUser,
   updateInfoUser,
   getProductsOfUser,
+  getUserById,
 } = require('../controllers/user.controller');
 
 router.post('/signup', asyncWrap(signup));
@@ -20,5 +21,6 @@ router.post('/logout-all', auth, asyncWrap(logoutAllDevice));
 router.get('/', auth, asyncWrap(getInfoUser));
 router.patch('/', auth, asyncWrap(updateInfoUser));
 router.get('/my-products', auth, asyncWrap(getProductsOfUser));
+router.get('/:user_id', auth, asyncWrap(getUserById));
 
 module.exports = router;

@@ -145,6 +145,18 @@ async function getProductsOfUser(req, res) {
   });
 }
 
+async function getUserById(req, res) {
+  const { user_id } = req.params;
+  const user = await User.findById(user_id);
+
+  res.send({
+    status: 1,
+    results: {
+      user,
+    },
+  });
+}
+
 module.exports = {
   signup,
   signin,
@@ -153,4 +165,5 @@ module.exports = {
   getInfoUser,
   updateInfoUser,
   getProductsOfUser,
+  getUserById,
 };
