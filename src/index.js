@@ -32,7 +32,7 @@ app.use('/api/carts', require('./routes/cart.route'));
 //     status: 1,
 //   });
 // });
-cron.schedule('* * * * *', function() {
+cron.schedule('*/5 * * * *', function() {
   axios
     .get('https://sell-old-items.herokuapp.com/api/categories')
     .then(function(response) {
