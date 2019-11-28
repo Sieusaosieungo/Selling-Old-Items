@@ -29,6 +29,7 @@ async function signup(req, res) {
 
 async function signin(req, res) {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
   if (!user) {
     throw new CustomError(errorCode.BAD_REQUEST, 'Đăng nhập thất bại');
