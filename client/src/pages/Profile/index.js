@@ -53,16 +53,12 @@ const Profile = ({ user, cookies, dispatch }) => {
       if (userInfo.newPassword && !userInfo.confirmNewPassword) {
         return message.warning('Không được bỏ trống xác nhận mật khẩu mới');
       }
-
-      delete userInfo.confirmNewPassword;
-      delete userInfo.email;
-      delete userInfo.student_id;
     }
 
-    // console.log('userInfo before update: ', userInfo);
-    // console.log('accessToken before update: ', accessToken);
-
     if (JSON.stringify(userInfo) !== JSON.stringify(user)) {
+      delete userInfo.email;
+      delete userInfo.student_id;
+
       axios({
         method: 'PATCH',
         url: `${config.API_URL}/users`,
@@ -72,15 +68,14 @@ const Profile = ({ user, cookies, dispatch }) => {
         data: userInfo,
       })
         .then(res => {
-          // console.log('user after update: ', res.data);
-
           if (res.data.results.user) {
             dispatch(storeUser(res.data.results.user));
             setChangePassword(false);
             setDisabled(true);
+            message.success('Đổi thông tin thành công !');
           }
         })
-        .catch(err => message.error('Đổi mật khẩu không thành công !'));
+        .catch(err => message.error('Đổi thông tin không thành công !'));
     }
   };
 
@@ -112,10 +107,6 @@ const Profile = ({ user, cookies, dispatch }) => {
             disabled
           />
         </div>
-        {/* <div className={`${prefixCls}-date-of-birth`}>
-          <span>Ngày sinh:</span>
-          <DatePicker placeholder="yyyy-MM-dd" value={date_of_birth} disabled={isEditting} />
-        </div> */}
         <div className={`${prefixCls}-gender`}>
           <span>Giới tính:</span>
           <Select
@@ -131,6 +122,24 @@ const Profile = ({ user, cookies, dispatch }) => {
         <div className={`${prefixCls}-student-id`}>
           <span>Mã sinh viên:</span>
           <Input value={userInfo.student_id} onChange={onChange} disabled />
+        </div>
+        <div className={`${prefixCls}-phone`}>
+          <span>Sđt:</span>
+          <Input
+            value={userInfo.phone}
+            name="phone"
+            onChange={onChange}
+            disabled={disabled}
+          />
+        </div>
+        <div className={`${prefixCls}-address`}>
+          <span>Địa chỉ:</span>
+          <Input
+            value={userInfo.address}
+            name="address"
+            onChange={onChange}
+            disabled={disabled}
+          />
         </div>
         {!disabled && (
           <div className={`${prefixCls}-checkbox`}>
@@ -183,16 +192,8 @@ const Profile = ({ user, cookies, dispatch }) => {
   );
 };
 
-const mapStateToProps = ({ user, auth }) => {
+const mapStateToProps = ({ user }) => {
   return { user };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withCookies(Profile));
+export default connect(mapStateToProps)(withCookies(Profile));

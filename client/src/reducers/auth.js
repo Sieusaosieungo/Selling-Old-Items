@@ -7,7 +7,7 @@ const initialState = {
 const auth = (state = initialState, action) => {
   const { type, accessToken } = action;
 
-  // console.log('authenticated: ', accessToken);
+  // console.log('authenticated: ', state);
 
   switch (type) {
     case SIGN_IN:

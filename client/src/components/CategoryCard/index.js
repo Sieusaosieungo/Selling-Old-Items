@@ -15,8 +15,6 @@ const prefixCls = 'category-card';
 const renderProductItem = productItems => {
   let result = null;
 
-  console.log('product item home: ', productItems);
-
   if (productItems && productItems.length > 0) {
     result = productItems.map((productItem, index) => (
       <ProductItem key={index} {...productItem} />
@@ -121,13 +119,4 @@ const mapStateToProps = ({ global }) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CategoryCard);
+export default connect(mapStateToProps)(CategoryCard);

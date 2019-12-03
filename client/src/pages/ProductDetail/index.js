@@ -1,8 +1,9 @@
 import React, { useEffect, Fragment, useState } from 'react';
-import { useCookies, withCookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import moment from 'moment';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Carousel } from 'react-responsive-carousel';
 import {
   Comment,
   Avatar,
@@ -45,20 +46,34 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         onClick={onSubmit}
         type="primary"
       >
-        Add Comment
+        Bình luận
       </Button>
     </Form.Item>
   </div>
 );
+
+const renderListImage = imageToShows => {
+  let result = null;
+
+  if (imageToShows && imageToShows.length > 0) {
+    result = imageToShows.map((imageToShow, index) => (
+      <div key={index}>
+        <img src={`${config.API_IMAGES}${imageToShow}`} alt="Attach image" />
+      </div>
+    ));
+  }
+
+  return result;
+};
 
 const ProductDetail = ({
   match: {
     params: { id },
   },
   cookies,
+  user,
 }) => {
   const [stateComment, setStateComment] = useState({
-    comments: [],
     submitting: false,
     value: '',
   });
@@ -80,18 +95,25 @@ const ProductDetail = ({
       setStateComment({
         submitting: false,
         value: '',
-        comments: [
-          {
-            author: 'Han Solo',
-            avatar:
-              'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content: <p>{stateComment.value}</p>,
-            datetime: moment().fromNow(),
-          },
-          ...stateComment.comments,
-        ],
       });
-    }, 1000);
+    }, 500);
+
+    axios({
+      method: 'PATCH',
+      url: `${config.API_URL}/products/add-comment`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        product_id: id,
+        content: stateComment.value,
+        datetime: new Date(),
+      },
+    })
+      .then(res => {
+        setProductItem(res.data.results.product);
+      })
+      .catch(err => console.log(err));
   };
 
   const handleChange = e => {
@@ -99,6 +121,24 @@ const ProductDetail = ({
       ...stateComment,
       value: e.target.value,
     });
+  };
+
+  const handleRate = value => {
+    axios({
+      method: 'PATCH',
+      url: `${config.API_URL}/products/rating`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        product_id: id,
+        point: value,
+      },
+    })
+      .then(res => {
+        setProductItem(res.data.results.product);
+      })
+      .catch(err => console.log(err));
   };
 
   const handleAddToCart = () => {
@@ -114,8 +154,6 @@ const ProductDetail = ({
     })
       .then(res => {
         message.success(`Thêm sản phẩm vào giỏ hàng thành công !`);
-
-        // console.log('product detail info =', res.data);
       })
       .catch(err => {
         if (accessToken) {
@@ -134,7 +172,6 @@ const ProductDetail = ({
       .then(res => {
         if (res.data.results.product) {
           setProductItem(res.data.results.product);
-          console.log(res.data.results.product);
         }
       })
       .catch(err => console.log(err));
@@ -145,10 +182,12 @@ const ProductDetail = ({
       <Fragment>
         <div className={`${prefixCls}`}>
           <div className={`${prefixCls}-image`}>
-            <img
-              src={`${config.API_IMAGES}/${productItem.mainImage}`}
-              alt={productItem.name}
-            />
+            <Carousel infiniteLoop autoPlay transitionTime>
+              {renderListImage([
+                ...productItem.attachImages,
+                productItem.mainImage,
+              ])}
+            </Carousel>
           </div>
           <div className={`${prefixCls}-info`}>
             <div className={`${prefixCls}-title`}>{productItem.name}</div>
@@ -156,7 +195,11 @@ const ProductDetail = ({
               productItem.cost,
             )}đ`}</div>
             <div className={`${prefixCls}-rate`}>
-              <Rate />
+              <Rate
+                onChange={handleRate}
+                allowHalf
+                value={productItem.averagePoint}
+              />
             </div>
             <div className={`${prefixCls}-description`}>
               <span>Mô tả:</span>
@@ -169,12 +212,18 @@ const ProductDetail = ({
             </div>
           </div>
           <div className={`${prefixCls}-comment`}>
-            {stateComment.comments.length > 0 ? (
-              <CommentList comments={stateComment.comments} />
+            {productItem.comments.length > 0 ? (
+              <CommentList
+                comments={productItem.comments.map(comment => ({
+                  ...comment,
+                  avatar: comment.avatar || config.IMAGE_USER_DEFAULT,
+                  datetime: moment(new Date(comment.datetime)).fromNow(),
+                }))}
+              />
             ) : (
               <div
                 style={{
-                  margin: '7rem auto 3rem',
+                  margin: '2rem auto 3rem',
                   width: '80%',
                   borderTop: '1px solid rgb(202, 202, 202)',
                 }}
@@ -183,8 +232,8 @@ const ProductDetail = ({
             <Comment
               avatar={
                 <Avatar
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  alt="Han Solo"
+                  src={user.image || config.IMAGE_USER_DEFAULT}
+                  alt={user.full_name}
                 />
               }
               content={
@@ -205,4 +254,11 @@ const ProductDetail = ({
   }
 };
 
-export default withCookies(ProductDetail);
+const mapStateToProps = ({ user }) => {
+  return { user };
+};
+
+export default connect(
+  mapStateToProps,
+  null,
+)(withCookies(ProductDetail));

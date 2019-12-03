@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withPlatform } from '../../context/platform';
-import { Tabs, message } from 'antd';
+import { Tabs } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { withCookies } from 'react-cookie';
@@ -45,8 +45,6 @@ const renderCategory = (categories, tab) => {
 
 const Home = ({
   platform,
-  cookies,
-  dispatch,
   match: {
     params: { tab },
   },
@@ -71,7 +69,10 @@ const Home = ({
   return (
     <div className={`${prefixCls}`}>
       <Tabs tabPosition={mode} activeKey={!tab ? 'trang-chu' : tab}>
-        <TabPane key={'trang-chu'}>
+        <TabPane
+          key={'trang-chu'}
+          tab={platform.isMobile ? <Link to={`/`}>Hot</Link> : ''}
+        >
           <CategoryCard />
         </TabPane>
         {renderCategory(categories, tab)}

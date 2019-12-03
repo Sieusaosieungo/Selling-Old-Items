@@ -2,11 +2,13 @@ import React from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { updateState } from '../actions';
 
 const PrivateRoute = ({
   cookies,
   accessTokenStore,
   component: Component,
+  dispatch,
   ...rest
 }) => {
   const accessToken = accessTokenStore || cookies.cookies.accessToken;
@@ -18,15 +20,12 @@ const PrivateRoute = ({
         if (accessToken && accessToken !== '') {
           return <Component {...props} />;
         } else {
-          return <Redirect to="/sign-in" />;
+          dispatch(updateState({ isShowModalSignIn: true }));
+          return <Redirect to="/" />;
         }
       }}
     />
   );
-};
-
-const mapStateToProps = ({ auth }) => {
-  return { accessTokenStore: auth.accessToken };
 };
 
 export default connect()(withCookies(PrivateRoute));

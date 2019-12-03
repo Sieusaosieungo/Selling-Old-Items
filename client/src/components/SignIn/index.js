@@ -8,22 +8,13 @@ import { connect } from 'react-redux';
 import './style.scss';
 
 import config from '../../utils/config';
-import { signIn } from '../../actions';
+import { signIn, updateState } from '../../actions';
 
 const prefixCls = 'sign-in';
 
-const SignIn = ({
-  form,
-  form: { getFieldDecorator },
-  history,
-  dispatch,
-  location,
-  ...props
-}) => {
+const SignIn = ({ form, form: { getFieldDecorator }, dispatch }) => {
   const [cookies, setCookie, removeCookie] = useCookies('cookies');
   const { accessToken } = cookies;
-
-  console.log('history stack: ', history);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -35,18 +26,10 @@ const SignIn = ({
           data: values,
         })
           .then(res => {
-            // console.log(res.data);
-
             setCookie('accessToken', res.data.results.token);
             message.success('Đăng nhập thành công !');
-
             dispatch(signIn(res.data.results.token));
-
-            if (location.state.prevPath === '/sign-up') {
-              history.push('/');
-            } else {
-              history.goBack();
-            }
+            dispatch(updateState({ isShowModalSignIn: false }));
           })
           .catch(() => message.error('Sai tài khoản hoặc mật khẩu !'));
       }
@@ -88,18 +71,18 @@ const SignIn = ({
             {getFieldDecorator('remember', {
               valuePropName: 'checked',
               initialValue: true,
-            })(<Checkbox>Remember me</Checkbox>)}
+            })(<Checkbox>Nhớ mật khẩu</Checkbox>)}
             <Link to="" className={`${prefixCls}-form-forgot`}>
-              Forgot password
+              Quên mật khẩu ?
             </Link>
             <Button
               type="primary"
               htmlType="submit"
               className={`${prefixCls}-form-button`}
             >
-              Log in
+              Đăng nhập
             </Button>
-            Or <Link to="/sign-up">Sign up now!</Link>
+            Or <Link to="/account/sign-up">Đăng kí ngay !</Link>
           </Form.Item>
         </Form>
       </div>
@@ -109,13 +92,4 @@ const SignIn = ({
   }
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Form.create({ name: 'sign-in' })(SignIn));
+export default connect()(Form.create({ name: 'sign-in' })(SignIn));
