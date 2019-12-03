@@ -1,0 +1,22 @@
+.sign-in {
+  display: flex;
+  justify-content: center;
+
+  .sign-in-form {
+  }
+
+  .sign-in-form {
+    max-width: 300px;
+  }
+  .sign-in-form-forgot {
+    float: right;
+  }
+  .sign-in-form-button {
+    width: 100%;
+  }
+}
+
+.ant-modal-content {
+  // width: 40rem;
+  margin: 0 auto;
+}

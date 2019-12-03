@@ -1,0 +1,32 @@
+.home {
+  flex-grow: 1;
+  display: flex;
+
+  .ant-tabs-vertical {
+    flex-grow: 1;
+    display: flex;
+
+    .ant-tabs-left-bar {
+      width: 20vw !important;
+      text-align: center;
+
+      .ant-tabs-tab {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+
+        > a {
+          display: block;
+          padding: 2rem 0;
+        }
+      }
+    }
+
+    .ant-tabs-left-content {
+      flex-grow: 1;
+      padding: {
+        right: 2.4rem;
+      }
+    }
+  }
+}

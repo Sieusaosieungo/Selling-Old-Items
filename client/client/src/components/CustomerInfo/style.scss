@@ -1,0 +1,19 @@
+.customer-info {
+  display: flex;
+  flex-direction: column;
+
+  .customer-info-raw {
+    display: grid;
+    grid-template-columns:  repeat(5, 1fr);
+
+    > label {
+      grid-column: 2/3;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    > span {
+      grid-column: 3/6;
+    }
+  }
+}
