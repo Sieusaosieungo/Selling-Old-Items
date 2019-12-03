@@ -11,6 +11,7 @@ const {
   evaluateProduct,
   approvedSellProduct,
   rejectSellProduct,
+  addComment,
 } = require('../controllers/product.controller');
 
 router.post('/', auth, asyncWrap(addProduct));
@@ -20,5 +21,6 @@ router.post('/add-to-cart', auth, asyncWrap(addProductToCart));
 router.patch('/rating', auth, asyncWrap(evaluateProduct));
 router.patch('/approved', auth, asyncWrap(approvedSellProduct));
 router.patch('/reject', auth, asyncWrap(rejectSellProduct));
+router.patch('/add-comment', auth, asyncWrap(addComment));
 
 module.exports = router;

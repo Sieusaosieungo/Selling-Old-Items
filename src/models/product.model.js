@@ -34,13 +34,26 @@ const productSchema = new mongoose.Schema(
         type: Date,
       },
     },
+    comments: [
+      {
+        user_id: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+        author: {
+          type: String,
+        },
+        content: {
+          type: String,
+        },
+        datetime: {
+          type: Date,
+        },
+        _id: false,
+      },
+    ],
     status: {
       type: String,
       required: true,
-    },
-    rating_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Rate',
     },
     category_id: {
       type: mongoose.Schema.Types.ObjectId,

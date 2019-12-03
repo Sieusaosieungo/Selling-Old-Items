@@ -29,6 +29,7 @@ async function signup(req, res) {
 
 async function signin(req, res) {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
   if (!user) {
     throw new CustomError(errorCode.BAD_REQUEST, 'Đăng nhập thất bại');
@@ -121,11 +122,38 @@ async function updateInfoUser(req, res) {
 }
 
 async function getProductsOfUser(req, res) {
-  const products = await Product.find({ user_id: req.user._id });
+  const products = await Product.find({ user_id: req.user._id }).lean();
+  const productsDetail = await Promise.all(
+    products.map(async pdt => {
+      let userName = null;
+      if (pdt.buyer) {
+        const user = await User.findById(pdt.buyer.user_id);
+
+        if (user) {
+          userName = user.full_name;
+        }
+      }
+
+      return { ...pdt, buyer: { ...pdt.buyer, boughtName: userName } };
+    }),
+  );
+
   res.send({
     status: 1,
     results: {
-      products,
+      products: productsDetail,
+    },
+  });
+}
+
+async function getUserById(req, res) {
+  const { user_id } = req.params;
+  const user = await User.findById(user_id);
+
+  res.send({
+    status: 1,
+    results: {
+      user,
     },
   });
 }
@@ -138,4 +166,5 @@ module.exports = {
   getInfoUser,
   updateInfoUser,
   getProductsOfUser,
+  getUserById,
 };
