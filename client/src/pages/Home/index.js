@@ -12,6 +12,7 @@ import './style.scss';
 import config from '../../utils/config';
 import changeToSlug from '../../utils/changeToSlug';
 import Loading from '../../components/Loading';
+import { updateState } from '../../actions';
 
 const CategoryCard = Loadable({
   loader: () => import('../../components/CategoryCard'),
@@ -48,22 +49,26 @@ const Home = ({
   match: {
     params: { tab },
   },
+  dispatch,
+  global,
 }) => {
   const mode = platform.isMobile ? 'top' : 'left';
-  const [categories, setCategories] = useState([]);
+  const categories = global.categories || [];
 
   useEffect(() => {
-    axios({
-      mehod: 'GET',
-      url: `${config.API_URL}/categories/`,
-    })
-      .then(res => {
-        if (res.data.results.categories) {
-          setCategories(res.data.results.categories);
-          // console.log(res.data.results.categories);
-        }
+    if (categories.length === 0) {
+      axios({
+        mehod: 'GET',
+        url: `${config.API_URL}/categories/`,
       })
-      .catch(err => console.log(err));
+        .then(res => {
+          if (res.data.results.categories) {
+            dispatch(updateState({ categories: res.data.results.categories }));
+            // console.log(res.data.results.categories);
+          }
+        })
+        .catch(err => console.log(err));
+    }
   }, []);
 
   return (
@@ -81,13 +86,10 @@ const Home = ({
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
+const mapStateToProps = ({ global }) => ({ global });
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(withCookies(withPlatform(Home)));

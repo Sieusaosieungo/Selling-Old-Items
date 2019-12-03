@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { withCookies, useCookies } from 'react-cookie';
-import { Menu, Avatar, Icon, Dropdown, Modal } from 'antd';
+import { Menu, Avatar, Icon, Dropdown, Modal, Spin } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Skeleton } from 'antd';
@@ -81,7 +81,15 @@ const RightMenu = ({ mode, user, accessTokenStore, dispatch, global }) => {
       </Menu>
     );
   } else if (!!accessToken) {
-    return <Skeleton avatar active paragraph={{ rows: 0 }} />;
+    return (
+      <Menu mode={mode} selectedKeys={[]}>
+        <Menu.Item key="loading">
+          <Link to="#" className="loading">
+            <Skeleton avatar active paragraph={{ rows: 0 }}></Skeleton>
+          </Link>
+        </Menu.Item>
+      </Menu>
+    );
   } else {
     return (
       <Menu mode={mode} selectedKeys={[]}>
