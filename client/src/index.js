@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 import './index.scss';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -33,5 +32,3 @@ const render = () => {
 };
 
 render();
-
-serviceWorker.unregister();
