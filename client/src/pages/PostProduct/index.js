@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withCookies } from 'react-cookie';
 import axios from 'axios';
-import {
-  Input,
-  Form,
-  Select,
-  Button,
-  Upload,
-  Icon,
-  message,
-  Modal,
-} from 'antd';
+import { Input, Form, Select, Button, message } from 'antd';
+import { Redirect } from 'react-router-dom';
 
 import './style.scss';
 
@@ -49,11 +41,14 @@ const PostProduct = ({
   form: { getFieldDecorator },
   form,
   cookies: { cookies },
+  history,
 }) => {
   const [categories, setCategories] = useState([]);
   const [images, setImages] = useState({});
 
   const { accessToken } = cookies;
+
+  console.log('history: ', history);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -80,9 +75,10 @@ const PostProduct = ({
         })
           .then(res => {
             if (res.data.results) {
-              // setCategories(res.data.results.);
               console.log('product uploaded: ', res.data);
               message.success('Đăng sản phẩm thành công !');
+              setImages({});
+              history.push('/user/my-posts');
             }
           })
           .catch(err => console.log(err));
@@ -107,7 +103,6 @@ const PostProduct = ({
       .then(res => {
         if (res.data.results.categories) {
           setCategories(res.data.results.categories);
-          // console.log(res.data.results.categories);
         }
       })
       .catch(err => console.log(err));

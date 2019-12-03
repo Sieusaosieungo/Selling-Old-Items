@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withPlatform } from '../../context/platform';
-import { Tabs, message } from 'antd';
+import { Tabs } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { withCookies } from 'react-cookie';
@@ -12,6 +12,7 @@ import './style.scss';
 import config from '../../utils/config';
 import changeToSlug from '../../utils/changeToSlug';
 import Loading from '../../components/Loading';
+import { updateState } from '../../actions';
 
 const CategoryCard = Loadable({
   loader: () => import('../../components/CategoryCard'),
@@ -45,33 +46,38 @@ const renderCategory = (categories, tab) => {
 
 const Home = ({
   platform,
-  cookies,
-  dispatch,
   match: {
     params: { tab },
   },
+  dispatch,
+  global,
 }) => {
   const mode = platform.isMobile ? 'top' : 'left';
-  const [categories, setCategories] = useState([]);
+  const categories = global.categories || [];
 
   useEffect(() => {
-    axios({
-      mehod: 'GET',
-      url: `${config.API_URL}/categories/`,
-    })
-      .then(res => {
-        if (res.data.results.categories) {
-          setCategories(res.data.results.categories);
-          // console.log(res.data.results.categories);
-        }
+    if (categories.length === 0) {
+      axios({
+        mehod: 'GET',
+        url: `${config.API_URL}/categories/`,
       })
-      .catch(err => console.log(err));
+        .then(res => {
+          if (res.data.results.categories) {
+            dispatch(updateState({ categories: res.data.results.categories }));
+            // console.log(res.data.results.categories);
+          }
+        })
+        .catch(err => console.log(err));
+    }
   }, []);
 
   return (
     <div className={`${prefixCls}`}>
       <Tabs tabPosition={mode} activeKey={!tab ? 'trang-chu' : tab}>
-        <TabPane key={'trang-chu'}>
+        <TabPane
+          key={'trang-chu'}
+          tab={platform.isMobile ? <Link to={`/`}>Hot</Link> : ''}
+        >
           <CategoryCard />
         </TabPane>
         {renderCategory(categories, tab)}
@@ -80,13 +86,10 @@ const Home = ({
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
+const mapStateToProps = ({ global }) => ({ global });
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(withCookies(withPlatform(Home)));

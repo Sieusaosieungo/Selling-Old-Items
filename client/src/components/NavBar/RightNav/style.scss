@@ -14,3 +14,28 @@
     }
   }
 }
+
+.loading {
+  .ant-skeleton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .ant-skeleton-header {
+    }
+
+    .ant-skeleton-content {
+      display: flex;
+      align-items: center;
+      margin-top: -0.8rem !important;
+
+      .ant-skeleton-title {
+        width: 100px !important;
+      }
+    }
+  }
+
+  &::before {
+    content: none !important;
+  }
+}

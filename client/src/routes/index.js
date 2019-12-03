@@ -8,14 +8,6 @@ const Home = Loadable({
   loader: () => import('../pages/Home'),
   loading: Loading,
 });
-const SignUp = Loadable({
-  loader: () => import('../pages/SignUp'),
-  loading: Loading,
-});
-const SignIn = Loadable({
-  loader: () => import('../pages/SignIn'),
-  loading: Loading,
-});
 const ProductDetail = Loadable({
   loader: () => import('../pages/ProductDetail'),
   loading: Loading,
@@ -34,15 +26,6 @@ const routes = [
     path: '/category/:tab',
     component: Home,
   },
-  {
-    path: '/account/sign-up',
-    component: SignUp,
-  },
-  {
-    path: '/account/sign-in',
-    component: SignIn,
-  },
-
   {
     path: '/product-detail/:id',
     component: ProductDetail,

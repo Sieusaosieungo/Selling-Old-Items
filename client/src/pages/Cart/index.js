@@ -38,6 +38,20 @@ const Cart = ({}) => {
     return cart.total_money;
   };
 
+  const handlePayment = () => {
+    axios({
+      method: 'PATCH',
+      url: `${config.API_URL}/carts/pay`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then(res => {
+        message.success('Giao dịch thành công !');
+      })
+      .catch(err => console.log(err));
+  };
+
   useEffect(() => {
     axios({
       method: 'GET',
@@ -82,6 +96,15 @@ const Cart = ({}) => {
               handleRealPayment(cart) || 0,
             )}đ`}</span>
           </div>
+        </div>
+        <div className={`${prefixCls}-btn`}>
+          <Button
+            type="danger"
+            style={{ marginTop: '1.5rem', width: '80%' }}
+            onClick={handlePayment}
+          >
+            Thanh toán
+          </Button>
         </div>
       </div>
     </div>

@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { withCookies, useCookies } from 'react-cookie';
-import { Menu, Avatar, Icon, Dropdown, message } from 'antd';
+import { Menu, Avatar, Icon, Dropdown, Modal, Spin } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Skeleton } from 'antd';
 
 import './style.scss';
 
 import config from '../../../utils/config';
-import { storeUser, signIn, deleteUser, signOut } from '../../../actions';
+import { storeUser, deleteUser, updateState } from '../../../actions';
+import SignIn from '../../SignIn';
+import SignUp from '../../SignUp';
 
 const Submenu = logOut => {
   return (
@@ -34,23 +37,13 @@ const Submenu = logOut => {
   );
 };
 
-const RightMenu = ({ mode, user, accessTokenStore, dispatch }) => {
+const RightMenu = ({ mode, user, accessTokenStore, dispatch, global }) => {
   const [cookies, setCookie, removeCookie] = useCookies('cookies');
 
   const accessToken = accessTokenStore || cookies.accessToken;
 
-  // if (accessToken === accessTokenStore) {
-  //   console.log('match accessTokenStore');
-  // } else {
-  //   console.log('match cookies.accessToken');
-  // }
-
-  // console.log('Right nav: ', accessToken);
-
   const logOut = () => {
     removeCookie('accessToken');
-    dispatch(deleteUser());
-    // dispatch(signOut());
     window.location.reload();
   };
 
@@ -65,62 +58,83 @@ const RightMenu = ({ mode, user, accessTokenStore, dispatch }) => {
       })
         .then(res => {
           if (res.data.results.user) {
-            // console.log('user info after call axios: ', res.data.results.user);
             dispatch(storeUser(res.data.results.user));
-            // dispatch(signIn(accessToken));
           }
         })
         .catch(() => {
           logOut();
         });
-
-      // window.location.reload();
     }
   }, [accessToken]);
 
-  return (
-    <Menu mode={mode} selectedKeys={[]}>
-      {Object.keys(user).length > 0 && (
+  if (Object.keys(user).length > 0) {
+    return (
+      <Menu mode={mode} selectedKeys={[]}>
         <Menu.Item key="sign-out" className="avatar">
-          <Avatar
-            src={
-              user.images ||
-              'https://cdn.eva.vn/upload/4-2019/images/2019-11-06/sinh-ra-trong-gia-dinh-viet-nhung-co-be-nay-lai-mang-ve-dep-tay-la-ky-untitled-19-1573053449-116-width600height750.jpg'
-            }
-          />
+          <Avatar src={user.image || config.IMAGE_USER_DEFAULT} />
           <Dropdown overlay={() => Submenu(logOut)}>
             <Link className="ant-dropdown-link" to="/user/profile">
               {user.full_name} <Icon type="down" />
             </Link>
           </Dropdown>
         </Menu.Item>
-      )}
-      {!(Object.keys(user).length > 0) && (
-        <Menu.Item key="sign-in">
-          <Link
-            to={location => ({
-              ...location,
-              pathname: '/account/sign-in',
-              state: { prevPath: location.pathname },
-            })}
-          >
-            Signin
+      </Menu>
+    );
+  } else if (!!accessToken) {
+    return (
+      <Menu mode={mode} selectedKeys={[]}>
+        <Menu.Item key="loading">
+          <Link to="#" className="loading">
+            <Skeleton avatar active paragraph={{ rows: 0 }}></Skeleton>
           </Link>
         </Menu.Item>
-      )}
-      {!(Object.keys(user).length > 0) && (
-        <Menu.Item key="sign-up">
-          <Link to="/account/sign-up">Signup</Link>
+      </Menu>
+    );
+  } else {
+    return (
+      <Menu mode={mode} selectedKeys={[]}>
+        <Menu.Item key="sign-in">
+          <Link
+            to="#"
+            onClick={() => dispatch(updateState({ isShowModalSignIn: true }))}
+          >
+            Đăng nhập
+          </Link>
+          <Modal
+            visible={global.isShowModalSignIn}
+            title="Đăng nhập"
+            onOk={() => dispatch(updateState({ isShowModalSignIn: false }))}
+            onCancel={() => dispatch(updateState({ isShowModalSignIn: false }))}
+          >
+            <SignIn />
+          </Modal>
         </Menu.Item>
-      )}
-    </Menu>
-  );
+        <Menu.Item key="sign-up">
+          <Link
+            to="#"
+            onClick={() => dispatch(updateState({ isShowModalSignUp: true }))}
+          >
+            Đăng kí
+          </Link>
+          <Modal
+            visible={global.isShowModalSignUp}
+            title="Đăng kí"
+            onOk={() => dispatch(updateState({ isShowModalSignUp: false }))}
+            onCancel={() => dispatch(updateState({ isShowModalSignUp: false }))}
+          >
+            <SignUp />
+          </Modal>
+        </Menu.Item>
+      </Menu>
+    );
+  }
 };
 
-const mapStateToProps = ({ user, auth }) => {
+const mapStateToProps = ({ user, auth, global }) => {
   return {
     user,
     accessTokenStore: auth.accessToken,
+    global,
   };
 };
 

@@ -1,14 +1,8 @@
 .sign-in {
-  width: 100%;
-  flex-grow: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
 
   .sign-in-form {
-    border: 1px solid rgb(212, 207, 207);
-    padding: 2rem;
-    border-radius: 1.5rem;
   }
 
   .sign-in-form {
@@ -20,4 +14,9 @@
   .sign-in-form-button {
     width: 100%;
   }
+}
+
+.ant-modal-content {
+  // width: 40rem;
+  margin: 0 auto;
 }

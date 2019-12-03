@@ -28,6 +28,7 @@ const User = ({
   match: {
     params: { tab },
   },
+  history,
 }) => {
   const [selected, setSelected] = useState(tab);
 
@@ -64,7 +65,7 @@ const User = ({
         {selected === 'profile' && <Profile />}
         {selected === 'my-posts' && <MyPosts />}
         {selected === 'cart' && <Cart />}
-        {selected === 'post-product' && <PostProduct />}
+        {selected === 'post-product' && <PostProduct history={history} />}
       </div>
     </div>
   );
