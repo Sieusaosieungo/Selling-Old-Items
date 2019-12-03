@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: false,
+  useNewUrlParser: true,
   useCreateIndex: true, // make sure that when Mongoose work with MongoDB, our indexes are created allowing to quickly access the data we need to access
   useFindAndModify: false,
   useUnifiedTopology: true,
