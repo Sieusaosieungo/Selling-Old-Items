@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, HashRouter } from 'react-router-dom';
 import PrivateRoute from './private-route';
 import Loadable from 'react-loadable';
 import Loading from '../components/Loading';
@@ -53,22 +53,29 @@ const routes = [
 ];
 
 export default () => (
-  <Switch>
-    {routes.map(({ path, exact = true, component, isPrivate }, index) => {
-      if (!isPrivate) {
-        return (
-          <Route key={index} path={path} exact={exact} component={component} />
-        );
-      } else {
-        return (
-          <PrivateRoute
-            key={index}
-            path={path}
-            exact={exact}
-            component={component}
-          />
-        );
-      }
-    })}
-  </Switch>
+  <HashRouter basename="/">
+    <Switch>
+      {routes.map(({ path, exact = true, component, isPrivate }, index) => {
+        if (!isPrivate) {
+          return (
+            <Route
+              key={index}
+              path={path}
+              exact={exact}
+              component={component}
+            />
+          );
+        } else {
+          return (
+            <PrivateRoute
+              key={index}
+              path={path}
+              exact={exact}
+              component={component}
+            />
+          );
+        }
+      })}
+    </Switch>
+  </HashRouter>
 );
