@@ -53,29 +53,22 @@ const routes = [
 ];
 
 export default () => (
-  <HashRouter basename="/">
-    <Switch>
-      {routes.map(({ path, exact = true, component, isPrivate }, index) => {
-        if (!isPrivate) {
-          return (
-            <Route
-              key={index}
-              path={path}
-              exact={exact}
-              component={component}
-            />
-          );
-        } else {
-          return (
-            <PrivateRoute
-              key={index}
-              path={path}
-              exact={exact}
-              component={component}
-            />
-          );
-        }
-      })}
-    </Switch>
-  </HashRouter>
+  <Switch>
+    {routes.map(({ path, exact = true, component, isPrivate }, index) => {
+      if (!isPrivate) {
+        return (
+          <Route key={index} path={path} exact={exact} component={component} />
+        );
+      } else {
+        return (
+          <PrivateRoute
+            key={index}
+            path={path}
+            exact={exact}
+            component={component}
+          />
+        );
+      }
+    })}
+  </Switch>
 );
