@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, HashRouter } from 'react-router-dom';
 import PrivateRoute from './private-route';
 import Loadable from 'react-loadable';
 import Loading from '../components/Loading';
