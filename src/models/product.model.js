@@ -48,6 +48,9 @@ const productSchema = new mongoose.Schema(
         datetime: {
           type: Date,
         },
+        avatar: {
+          type: String,
+        },
         _id: false,
       },
     ],

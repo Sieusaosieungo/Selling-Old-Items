@@ -217,6 +217,7 @@ async function addComment(req, res) {
     user_id: req.user._id,
     content,
     author: req.user.full_name,
+    avatar: req.user.avatar,
     datetime,
   });
 
