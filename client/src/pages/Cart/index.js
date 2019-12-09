@@ -17,6 +17,8 @@ const renderCartItem = (listItems, setCart) => {
 
   if (listItems && listItems.length > 0) {
     result = listItems.map((productItem, index) => {
+      console.log(productItem);
+
       return <CartItem key={index} {...productItem} setCart={setCart} />;
     });
   }
@@ -69,6 +71,8 @@ const Cart = ({}) => {
       .catch(err => console.log(err));
   }, [JSON.stringify(cart)]);
 
+  console.log(cart);
+
   return (
     <div className={`${prefixCls}`}>
       <p>
@@ -76,8 +80,10 @@ const Cart = ({}) => {
         <span>({cart.listItems ? cart.listItems.length : 0} sản phẩm)</span>
       </p>
       <div className={`${prefixCls}-content`}>
-        {cart.listItems && renderCartItem(cart.listItems, setCart)}
-        {!cart.listItems && (
+        {cart.listItems &&
+          cart.listItems.length > 0 &&
+          renderCartItem(cart.listItems, setCart)}
+        {cart.listItems && cart.listItems.length <= 0 && (
           <div className={`${prefixCls}-empty`}>Giỏ hàng rỗng !</div>
         )}
       </div>

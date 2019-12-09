@@ -14,7 +14,7 @@ const prefixCls = 'cart-item';
 const CartItem = ({
   product_id,
   productPrice,
-  productImages,
+  mainImage,
   productName,
   quantity,
   cookies,
@@ -45,7 +45,7 @@ const CartItem = ({
 
   return (
     <div className={`${prefixCls}`}>
-      <img src={`${config.API_IMAGES}${productImages[0]}`} />
+      <img src={`${config.API_IMAGES}${mainImage}`} />
       <div className={`${prefixCls}-info`}>
         <Link to={`/product-detail/${product_id}`}>{productName}</Link>
         <span>{`${numberToNumberWithCommas(productPrice)}đ`}</span>
