@@ -71,7 +71,11 @@ const RightMenu = ({ mode, user, accessTokenStore, dispatch, global }) => {
     return (
       <Menu mode={mode} selectedKeys={[]}>
         <Menu.Item key="sign-out" className="avatar">
-          <Avatar src={user.image || config.IMAGE_USER_DEFAULT} />
+          <Avatar
+            src={
+              `${config.API_IMAGES}${user.avatar}` || config.IMAGE_USER_DEFAULT
+            }
+          />
           <Dropdown overlay={() => Submenu(logOut)}>
             <Link className="ant-dropdown-link" to="/user/profile">
               {user.full_name} <Icon type="down" />

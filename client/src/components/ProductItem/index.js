@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from 'antd';
+import { Card, Rate } from 'antd';
 
 import './style.scss';
 
@@ -11,7 +11,7 @@ const { Meta } = Card;
 
 const prefixCls = 'category-item';
 
-const ProductItem = ({ _id, name, mainImage, cost = 0 }) => {
+const ProductItem = ({ _id, name, mainImage, cost = 0, averagePoint }) => {
   return (
     <Link to={`/product-detail/${_id}`} className={`${prefixCls}`}>
       <Card
@@ -19,6 +19,12 @@ const ProductItem = ({ _id, name, mainImage, cost = 0 }) => {
         hoverable
         cover={<img alt={name} src={`${config.API_IMAGES}${mainImage}`} />}
       >
+        <Rate
+          allowHalf
+          value={averagePoint}
+          style={{ fontSize: '15px' }}
+          disabled
+        />
         <Meta title={name} description={`${numberToNumberWithCommas(cost)}đ`} />
       </Card>
     </Link>

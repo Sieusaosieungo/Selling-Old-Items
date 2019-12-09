@@ -79,15 +79,53 @@ const Profile = ({ user, cookies, dispatch }) => {
     }
   };
 
+  const handleChangeUploadAvatar = e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('avatar', e.target.files[0]);
+
+    axios({
+      method: 'PATCH',
+      url: `${config.API_URL}/users/upload-avatar`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: formData,
+    })
+      .then(res => {
+        dispatch(storeUser(res.data.results.user));
+        message.success('Cập nhật ảnh thành công');
+      })
+      .catch(err => message.error('Cập nhật ảnh thất bại'));
+  };
+
   useEffect(() => {
     setUserInfo(user);
   }, [user]);
 
-  // console.log(userInfo);
-
   return (
     <div className={`${prefixCls}`}>
-      <p>Thông tin tài khoản</p>
+      <div className={`${prefixCls}-avatar`}>
+        <div className={`${prefixCls}-avatar-img`}>
+          <img
+            src={
+              `${config.API_IMAGES}${user.avatar}` || config.IMAGE_USER_DEFAULT
+            }
+            alt="avatar"
+          />
+        </div>
+        <div className={`${prefixCls}-upload-btn`}>
+          <label className="upload-btn-wrapper">
+            <input
+              type="file"
+              required
+              onChange={handleChangeUploadAvatar}
+              name="avatar"
+            />
+            <span>Chọn ảnh</span>
+          </label>
+        </div>
+      </div>
       <div className={`${prefixCls}-info`}>
         <div className={`${prefixCls}-name`}>
           <span>Họ tên:</span>
@@ -143,7 +181,7 @@ const Profile = ({ user, cookies, dispatch }) => {
         </div>
         {!disabled && (
           <div className={`${prefixCls}-checkbox`}>
-            <span>Đổi mật khẩu</span>
+            <span>Đổi mật khẩu:</span>
             <Checkbox onChange={handleChangePassword} />
           </div>
         )}

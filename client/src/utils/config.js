@@ -3,7 +3,7 @@ const config = {
   API_IMAGES: 'http://202.191.56.159:2508',
   TIME_TO_UPDATE: 10000,
   IMAGE_USER_DEFAULT:
-    'https://cdn.eva.vn/upload/4-2019/images/2019-11-06/sinh-ra-trong-gia-dinh-viet-nhung-co-be-nay-lai-mang-ve-dep-tay-la-ky-untitled-19-1573053449-116-width600height750.jpg',
+    'https://previews.123rf.com/images/triken/triken1608/triken160800028/61320729-male-avatar-profile-picture-default-user-avatar-guest-avatar-simply-human-head-vector-illustration-i.jpg',
 };
 
 export default config;

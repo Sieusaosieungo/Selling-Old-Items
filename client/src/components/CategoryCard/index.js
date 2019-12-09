@@ -27,6 +27,8 @@ const renderProductItem = productItems => {
 const renderCategory = categoryHome => {
   let result = null;
 
+  // console.log(categoryHome);
+
   if (categoryHome && categoryHome.length > 0) {
     result = categoryHome.map(({ titleCategory, to, productItems }, index) => (
       <Card key={index} title={<Link to={to}>{titleCategory}</Link>}>
@@ -41,6 +43,8 @@ const renderCategory = categoryHome => {
 const CategoryCard = ({ global, dispatch }) => {
   const productsLatest = global['setProductsLatest'] || [];
   const productsRateHigh = global['productsRateHigh'] || [];
+
+  // console.log(productsRateHigh);
 
   const { timeToUpdateOld } = global['categoryHome'] || {};
 
@@ -64,12 +68,12 @@ const CategoryCard = ({ global, dispatch }) => {
     ) {
       axios({
         method: 'GET',
-        url: `${config.API_URL}/products`,
-        params: {
-          category_id: '5dcab41c0a279700244222ff',
-        },
+        url: `${config.API_URL}/top/newest`,
+        params: { number: 12 },
       })
         .then(res => {
+          console.log(res.data);
+
           if (res.data.results.products) {
             const setProductsLatest = {
               products: res.data.results.products,
@@ -87,9 +91,9 @@ const CategoryCard = ({ global, dispatch }) => {
 
       axios({
         method: 'GET',
-        url: `${config.API_URL}/products`,
+        url: `${config.API_URL}/top/rate`,
         params: {
-          category_id: '5dcab41c0a279700244222ff',
+          number: 12,
         },
       })
         .then(res => {

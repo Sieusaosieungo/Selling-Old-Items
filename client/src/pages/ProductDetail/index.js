@@ -79,6 +79,8 @@ const ProductDetail = ({
   });
   const [productItem, setProductItem] = useState({});
 
+  console.log(productItem);
+
   const { accessToken } = cookies.cookies;
 
   const handleSubmit = () => {
@@ -232,7 +234,10 @@ const ProductDetail = ({
             <Comment
               avatar={
                 <Avatar
-                  src={user.image || config.IMAGE_USER_DEFAULT}
+                  src={
+                    `${config.API_IMAGES}${user.avatar}` ||
+                    config.IMAGE_USER_DEFAULT
+                  }
                   alt={user.full_name}
                 />
               }
