@@ -5,6 +5,7 @@ const CustomError = require('../errors/CustomError');
 const errorCode = require('../errors/errorCode');
 const User = require('../models/user.model');
 const Product = require('../models/product.model');
+const uploadMainImage = require('../utils/uploadMainImage');
 
 async function signup(req, res) {
   if (!validator.isEmail(req.body.email)) {
@@ -158,6 +159,28 @@ async function getUserById(req, res) {
   });
 }
 
+async function uploadAvatar(req, res) {
+  const { avatar } = req.files;
+  if (!avatar.name.match(/\.(jpg|png|jpeg)$/)) {
+    throw new CustomError(
+      errorCode.BAD_REQUEST,
+      'Làm ơn upload đúng định dạng ảnh',
+    );
+  }
+
+  const avatarLink = await uploadMainImage(avatar, '/images/avatar');
+
+  req.user.avatar = avatarLink;
+
+  await req.user.save();
+  res.send({
+    status: 1,
+    results: {
+      user: req.user,
+    },
+  });
+}
+
 module.exports = {
   signup,
   signin,
@@ -167,4 +190,5 @@ module.exports = {
   updateInfoUser,
   getProductsOfUser,
   getUserById,
+  uploadAvatar,
 };

@@ -12,6 +12,7 @@ const {
   updateInfoUser,
   getProductsOfUser,
   getUserById,
+  uploadAvatar,
 } = require('../controllers/user.controller');
 
 router.post('/signup', asyncWrap(signup));
@@ -22,5 +23,6 @@ router.get('/', auth, asyncWrap(getInfoUser));
 router.patch('/', auth, asyncWrap(updateInfoUser));
 router.get('/my-products', auth, asyncWrap(getProductsOfUser));
 router.get('/:user_id', auth, asyncWrap(getUserById));
+router.patch('/upload-avatar', auth, asyncWrap(uploadAvatar));
 
 module.exports = router;

@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
     },
+    avatar: {
+      type: String,
+    },
     tokens: [
       {
         token: {
