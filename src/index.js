@@ -1,7 +1,6 @@
 require('dotenv').config();
 require('./db/mongoose');
 // const fs = require('fs-extra');
-
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');

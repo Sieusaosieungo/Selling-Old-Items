@@ -6,6 +6,7 @@ const errorCode = require('../errors/errorCode');
 const User = require('../models/user.model');
 const Product = require('../models/product.model');
 const uploadMainImage = require('../utils/uploadMainImage');
+const { removeAccents } = require('../utils/removeAccents');
 
 async function signup(req, res) {
   if (!validator.isEmail(req.body.email)) {
@@ -15,6 +16,29 @@ async function signup(req, res) {
   const checkExistEmail = await User.findOne({ email: req.body.email });
   if (checkExistEmail) {
     throw new CustomError(errorCode.CONFLICT, 'Email already exist');
+  }
+
+  const { full_name, student_id, email } = req.body;
+  const fullName = removeAccents(full_name);
+  const array = fullName.split(' ');
+
+  let nameEmail = `${array[array.length - 1]}.`;
+
+  array.forEach((arr, id) => {
+    if (id !== array.length - 1) {
+      nameEmail += arr.charAt(0);
+    }
+  });
+
+  const studentId = student_id.slice(2, 8);
+  const expectedEmail = `${nameEmail.toLowerCase() +
+    studentId}@sis.hust.edu.vn`;
+
+  if (expectedEmail !== email) {
+    throw new CustomError(
+      errorCode.BAD_REQUEST,
+      'Hãy nhập tài khoản email nhà trường cung cấp',
+    );
   }
 
   const user = await User.create(req.body);
