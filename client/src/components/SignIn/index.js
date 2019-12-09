@@ -31,7 +31,11 @@ const SignIn = ({ form, form: { getFieldDecorator }, dispatch }) => {
             dispatch(signIn(res.data.results.token));
             dispatch(updateState({ isShowModalSignIn: false }));
           })
-          .catch(() => message.error('Sai tài khoản hoặc mật khẩu !'));
+          .catch(e => {
+            console.log(`${config.API_URL}/users/signin`);
+
+            message.error('Sai tài khoản hoặc mật khẩu !');
+          });
       }
     });
   };

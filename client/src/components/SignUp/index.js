@@ -59,7 +59,7 @@ const Signup = ({ form: { getFieldDecorator }, form, dispatch }) => {
               message.success('Đăng ký thành công !');
             }
           })
-          .catch(() => message.error('Lỗi đăng kí !'));
+          .catch(e => message.error('Lỗi đăng kí !'));
       }
     });
   };
