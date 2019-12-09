@@ -1,5 +1,5 @@
 const config = {
-  API_URL: '202.191.56.159:2508/api',
+  API_URL: 'http://202.191.56.159:2508/api',
   API_IMAGES: '202.191.56.159:2508',
   TIME_TO_UPDATE: 10000,
   IMAGE_USER_DEFAULT:
