@@ -50,12 +50,6 @@ async function addProduct(req, res) {
   });
 }
 
-// async function updateProduct(req, res) {
-//   const { product_id } = req.body;
-//   const prodcut = await Product.findawait Product.findByIdAndDelete(product_id);
-
-// }
-
 async function getProductsByCategory(req, res) {
   const { category_id } = req.query;
   const products = await Product.find({ category_id, status: 'new' });
