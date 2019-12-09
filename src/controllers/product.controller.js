@@ -241,6 +241,29 @@ async function addComment(req, res) {
   });
 }
 
+async function deleteProduct(req, res) {
+  const { id } = req.body;
+  const product = await Product.findById(id);
+
+  if (product.user_id.toString() !== req.user._id.toString()) {
+    throw new CustomError(errorCode.FORBIDDEN);
+  }
+  const cartDetail = await CartDetail.findOne({ product_id: id });
+
+  if (cartDetail) {
+    const cart = await Cart.findById(cartDetail.cart_id);
+    cart.total_money -= product.cost * cartDetail.quantity;
+    await cart.save();
+    await cartDetail.remove();
+  }
+
+  await product.remove();
+
+  res.send({
+    status: 1,
+  });
+}
+
 module.exports = {
   addProduct,
   getProductsByCategory,
@@ -250,4 +273,5 @@ module.exports = {
   approvedSellProduct,
   rejectSellProduct,
   addComment,
+  deleteProduct,
 };

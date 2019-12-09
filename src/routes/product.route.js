@@ -12,6 +12,7 @@ const {
   approvedSellProduct,
   rejectSellProduct,
   addComment,
+  deleteProduct,
 } = require('../controllers/product.controller');
 
 router.post('/', auth, asyncWrap(addProduct));
@@ -22,5 +23,6 @@ router.patch('/rating', auth, asyncWrap(evaluateProduct));
 router.patch('/approved', auth, asyncWrap(approvedSellProduct));
 router.patch('/reject', auth, asyncWrap(rejectSellProduct));
 router.patch('/add-comment', auth, asyncWrap(addComment));
+router.delete('/', auth, asyncWrap(deleteProduct));
 
 module.exports = router;
