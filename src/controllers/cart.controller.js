@@ -15,7 +15,7 @@ async function getCartByUser(req, res) {
 
       return {
         ...cd,
-        productImages: product.images,
+        mainImage: product.mainImage,
         productName: product.name,
         productPrice: product.cost,
       };
