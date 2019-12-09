@@ -51,8 +51,18 @@ async function addProduct(req, res) {
 }
 
 async function getProductsByCategory(req, res) {
-  const { category_id } = req.query;
-  const products = await Product.find({ category_id, status: 'new' });
+  const { category_id, product_name } = req.query;
+  let products;
+
+  if (category_id) {
+    products = await Product.find({ category_id, status: 'new' });
+  }
+
+  if (product_name) {
+    products = await Product.find({
+      name: { $regex: product_name, $options: 'i' },
+    });
+  }
 
   res.send({
     status: 1,
