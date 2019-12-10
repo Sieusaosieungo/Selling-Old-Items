@@ -51,15 +51,19 @@ const Signup = ({ form: { getFieldDecorator }, form, dispatch }) => {
           data: values,
         })
           .then(res => {
+            console.log(res.data);
+
             if (res.data.code === 409) {
               message.error('Email đã tồn tại !');
+            } else if (res.data.code === 400) {
+              message.error(res.data.message);
             } else {
               dispatch(updateState({ isShowModalSignIn: true }));
               dispatch(updateState({ isShowModalSignUp: false }));
               message.success('Đăng ký thành công !');
             }
           })
-          .catch(e => message.error('Lỗi đăng kí !'));
+          .catch(e => message.error(e.response.data.message));
       }
     });
   };

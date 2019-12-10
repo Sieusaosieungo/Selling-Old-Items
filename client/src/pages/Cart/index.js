@@ -49,7 +49,9 @@ const Cart = ({}) => {
       },
     })
       .then(res => {
-        message.success('Giao dịch thành công !');
+        message.success(
+          'Giao dịch thành công, vui lòng chờ người bán liên hệ với bạn !',
+        );
       })
       .catch(err => console.log(err));
   };

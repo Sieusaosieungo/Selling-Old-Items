@@ -56,8 +56,10 @@ const MyPosts = ({ cookies, dispatch, global }) => {
       dataIndex: 'buyer',
       key: 'buyer',
       render: (text, record) => (
-        <Link to="#" onClick={() => showCustomerInfo(record.buyer.user_id)}>
-          {(record.buyer && record.buyer.boughtName) || ''}
+        <>
+          <Link to="#" onClick={() => showCustomerInfo(record.buyer.user_id)}>
+            {(record.buyer && record.buyer.boughtName) || ''}
+          </Link>
           <Modal
             title="Thông tin người mua sản phẩm"
             visible={global.isShowModalCustomerInfo}
@@ -70,7 +72,7 @@ const MyPosts = ({ cookies, dispatch, global }) => {
           >
             <CustomerInfo {...customer} />
           </Modal>
-        </Link>
+        </>
       ),
     },
     {
@@ -193,7 +195,7 @@ const MyPosts = ({ cookies, dispatch, global }) => {
       .catch(err => console.log(err));
   }, []);
 
-  console.log(myPosts);
+  // console.log(myPosts);
 
   return (
     <div className={`${prefixCls}`}>

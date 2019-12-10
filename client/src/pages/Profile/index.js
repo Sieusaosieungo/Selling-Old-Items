@@ -109,7 +109,9 @@ const Profile = ({ user, cookies, dispatch }) => {
         <div className={`${prefixCls}-avatar-img`}>
           <img
             src={
-              `${config.API_IMAGES}${user.avatar}` || config.IMAGE_USER_DEFAULT
+              user.avatar
+                ? `${config.API_IMAGES}${user.avatar}`
+                : config.IMAGE_USER_DEFAULT
             }
             alt="avatar"
           />

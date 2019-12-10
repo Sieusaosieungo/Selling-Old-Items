@@ -73,7 +73,9 @@ const RightMenu = ({ mode, user, accessTokenStore, dispatch, global }) => {
         <Menu.Item key="sign-out" className="avatar">
           <Avatar
             src={
-              `${config.API_IMAGES}${user.avatar}` || config.IMAGE_USER_DEFAULT
+              user.avatar
+                ? `${config.API_IMAGES}${user.avatar}`
+                : config.IMAGE_USER_DEFAULT
             }
           />
           <Dropdown overlay={() => Submenu(logOut)}>

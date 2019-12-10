@@ -20,6 +20,7 @@ import './style.scss';
 import config from '../../utils/config';
 import Loading from '../../components/Loading';
 import { numberToNumberWithCommas } from '../../utils/formatPrice';
+import { updateState } from '../../actions';
 
 const { TextArea } = Input;
 
@@ -72,6 +73,7 @@ const ProductDetail = ({
   },
   cookies,
   user,
+  dispatch,
 }) => {
   const [stateComment, setStateComment] = useState({
     submitting: false,
@@ -126,21 +128,25 @@ const ProductDetail = ({
   };
 
   const handleRate = value => {
-    axios({
-      method: 'PATCH',
-      url: `${config.API_URL}/products/rating`,
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
-      data: {
-        product_id: id,
-        point: value,
-      },
-    })
-      .then(res => {
-        setProductItem(res.data.results.product);
+    if (user && Object.keys(user).length > 0) {
+      axios({
+        method: 'PATCH',
+        url: `${config.API_URL}/products/rating`,
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          product_id: id,
+          point: value,
+        },
       })
-      .catch(err => console.log(err));
+        .then(res => {
+          setProductItem(res.data.results.product);
+        })
+        .catch(err => console.log(err));
+    } else {
+      dispatch(updateState({ isShowModalSignIn: true }));
+    }
   };
 
   const handleAddToCart = () => {
@@ -218,7 +224,9 @@ const ProductDetail = ({
               <CommentList
                 comments={productItem.comments.map(comment => ({
                   ...comment,
-                  avatar: comment.avatar || config.IMAGE_USER_DEFAULT,
+                  avatar:
+                    `${config.API_IMAGES}${comment.avatar}` ||
+                    config.IMAGE_USER_DEFAULT,
                   datetime: moment(new Date(comment.datetime)).fromNow(),
                 }))}
               />
@@ -259,11 +267,10 @@ const ProductDetail = ({
   }
 };
 
-const mapStateToProps = ({ user }) => {
-  return { user };
-};
+const mapStateToProps = ({ user }) => ({ user });
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(withCookies(ProductDetail));
