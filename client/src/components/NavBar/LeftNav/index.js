@@ -23,7 +23,7 @@ const renderItemSearched = productSearched => {
   return result;
 };
 
-const SearchInput = () => {
+const LeftNav = () => {
   const [productSearched, setProductSearched] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const refSearch = useRef(null);
@@ -78,4 +78,4 @@ const SearchInput = () => {
     </div>
   );
 };
-export default SearchInput;
+export default LeftNav;

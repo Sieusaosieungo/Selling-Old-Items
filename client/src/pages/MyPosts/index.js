@@ -109,16 +109,6 @@ const MyPosts = ({ cookies, dispatch, global }) => {
       render: (text, record) => (
         <span style={{ display: 'flex', flexDirection: 'column' }}>
           <Button
-            type="primary"
-            onClick={() => handleEdit(record._id)}
-            style={{
-              color: '#fff',
-              marginBottom: '.5rem',
-            }}
-          >
-            Cập nhật
-          </Button>
-          <Button
             type="danger"
             onClick={() => handleDelete(record._id)}
             style={{
@@ -170,12 +160,26 @@ const MyPosts = ({ cookies, dispatch, global }) => {
 
   const handleCancel = productId => {};
 
-  const handleEdit = productId => {
-    console.log('Editing: ', productId);
-  };
-
   const handleDelete = productId => {
-    console.log('Deleted: ', productId);
+    axios({
+      method: 'DELETE',
+      url: `${config.API_URL}/products`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        id: productId,
+      },
+    })
+      .then(res => {
+        console.log(res.data);
+
+        if (res.data.status === 1) {
+          setMyPosts(res.data.results.products);
+          message.success('Xóa thành công !');
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   useEffect(() => {

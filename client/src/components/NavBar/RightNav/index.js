@@ -144,11 +144,7 @@ const mapStateToProps = ({ user, auth, global }) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch,
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,
