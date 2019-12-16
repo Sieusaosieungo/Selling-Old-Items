@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './style.scss';
+import config from '../../utils/config';
 
 const prefixcls = 'customer-info';
 
@@ -11,9 +12,26 @@ const CustomerInfo = ({
   student_id,
   phone,
   address,
+  avatar,
 }) => {
   return (
     <div className={`${prefixcls}`}>
+      <div
+        style={{
+          textAlign: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        <img
+          src={`${config.API_IMAGES}${avatar}`}
+          style={{
+            width: '20rem',
+            height: '20rem',
+            borderRadius: '50%',
+            overflow: 'hidden',
+          }}
+        />
+      </div>
       <div className={`${prefixcls}-raw`}>
         <label>Họ tên:</label>
         <span>{full_name}</span>

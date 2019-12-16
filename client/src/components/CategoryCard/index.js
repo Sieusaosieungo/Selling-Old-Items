@@ -72,8 +72,6 @@ const CategoryCard = ({ global, dispatch }) => {
         params: { number: 12 },
       })
         .then(res => {
-          console.log(res.data);
-
           if (res.data.results.products) {
             const setProductsLatest = {
               products: res.data.results.products,
