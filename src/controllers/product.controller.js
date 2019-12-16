@@ -34,10 +34,7 @@ async function addProduct(req, res) {
     '/images/product/attach',
   );
 
-  const cart = await Cart.findOne({ user_id: req.user._id });
-  const cartDetail = await CartDetail.find({ cart_id: cart._id }).lean();
-
-  await Product.create({
+  const product = await Product.create({
     ...req.body,
     user_id: req.user._id,
     status: 'new',
@@ -45,26 +42,10 @@ async function addProduct(req, res) {
     attachImages,
   });
 
-  const cartDetailer = await Promise.all(
-    cartDetail.map(async cd => {
-      const pd = await Product.findById(cd.product_id);
-
-      return {
-        ...cd,
-        mainImage: pd.mainImage,
-        productName: pd.name,
-        productPrice: pd.cost,
-      };
-    }),
-  );
-
   res.send({
     status: 1,
     results: {
-      listItems: [...cartDetailer],
-      total_money: cart.total_money,
-      createdAt: cart.createdAt,
-      updatedAt: cart.updatedAt,
+      product,
     },
   });
 }
@@ -149,10 +130,28 @@ async function addProductToCart(req, res) {
     await cart.save();
   }
 
+  const cartDetail = await CartDetail.find({ cart_id: cart._id }).lean();
+
+  const cartDetailer = await Promise.all(
+    cartDetail.map(async cd => {
+      const pd = await Product.findById(cd.product_id);
+
+      return {
+        ...cd,
+        mainImage: pd.mainImage,
+        productName: pd.name,
+        productPrice: pd.cost,
+      };
+    }),
+  );
+
   res.send({
     status: 1,
     results: {
-      cart,
+      listItems: [...cartDetailer],
+      total_money: cart.total_money,
+      createdAt: cart.createdAt,
+      updatedAt: cart.updatedAt,
     },
   });
 }
