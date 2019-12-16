@@ -132,6 +132,9 @@ async function addProductToCart(req, res) {
 
   res.send({
     status: 1,
+    results: {
+      cart,
+    },
   });
 }
 
