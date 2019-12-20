@@ -7,6 +7,16 @@ const Product = require('../models/product.model');
 
 async function getCartByUser(req, res) {
   const cart = await Cart.findOne({ user_id: req.user._id });
+  if (!cart) {
+    return res.send({
+      status: 1,
+      results: {
+        listItems: [],
+        total_money: 0,
+      },
+    });
+  }
+
   const cartDetail = await CartDetail.find({ cart_id: cart._id }).lean();
 
   const cartDetailer = await Promise.all(
@@ -22,7 +32,7 @@ async function getCartByUser(req, res) {
     }),
   );
 
-  res.send({
+  return res.send({
     status: 1,
     results: {
       listItems: [...cartDetailer],
